@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     postgres_db: str
     db_host: str
     db_port: str
+    quart_app: str
+    quart_debug: int
 
     class Config:
         env_file = ".env"
