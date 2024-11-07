@@ -13,7 +13,7 @@
       <tbody>
           {% for product in products %}
               <tr>
-                  <td><a href="{{ url_for('product_details', product_id=product.id)}}">{{ product.name }}</a></td>
+                  <td><a href="{{ url_for('get_product_details', product_id=product.id)}}">{{ product.name }}</a></td>
                   <td>{{ product.description }}</td>
               </tr>
           {% endfor %}
