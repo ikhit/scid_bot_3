@@ -23,6 +23,9 @@ async def product_details(product_id):
         product_data = await category_product_crud.get_category_by_product_id(
             product_id, session
         )
+        product = await products_crud.get(product_id, session)
     return await render_template(
-        "product_detail.html", product_data=product_data
+        "detail.html",
+        product=product,
+        product_data=product_data,
     )

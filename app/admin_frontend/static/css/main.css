@@ -1,5 +1,5 @@
 table {
-    width: 80%;
+    width: 100%;
     border-collapse: collapse;
 }
 th, td {
@@ -50,5 +50,9 @@ body {
   }
   
   .button-container .btn {
-    margin-right: 5px; /* отступ между кнопками */
+    margin-right: 5px; 
   }
+
+.table-header {
+    text-align: center;
+}

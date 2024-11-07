@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %} Продукты {% endblock title %}
+{% block title %} {{ product.name }} {% endblock title %}
 
 {% block content %}
-  <div class="table-header">
-    <h1> {{ product_name  }} </h1>
-  </div>
-  <table>
+  <div>
+    <h2> {{ product.name }} </h2> <br>
+    <h3> {{ product.description }} </h3>
+
+    <table>
       <thead>
           <tr>
               <th>Название</th>
@@ -28,4 +29,9 @@
           {% endfor %}
       </tbody>
   </table>
+  </div>
+  <div class="button-container">
+    <button type="button" class="btn btn-primary">Редактировать</button>
+    <button type="button" class="btn btn-danger">Удалить</button>
+  </div>
 {% endblock content %}
