@@ -1,7 +1,7 @@
 from quart import render_template
 
 from . import app
-from crud import products_crud
+from crud import products_crud, category_product_crud
 from core.db import AsyncSessionLocal
 
 
@@ -15,3 +15,14 @@ async def products():
     async with AsyncSessionLocal() as session:
         products = await products_crud.get_multi(session)
     return await render_template("products.html", products=products)
+
+
+@app.route("/products/<int:product_id>")
+async def product_details(product_id):
+    async with AsyncSessionLocal() as session:
+        product_data = await category_product_crud.get_category_by_product_id(
+            product_id, session
+        )
+    return await render_template(
+        "product_detail.html", product_data=product_data
+    )

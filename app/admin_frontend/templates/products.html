@@ -3,7 +3,7 @@
 {% block title %} Продукты {% endblock title %}
 
 {% block content %}
-  <table class=table>
+  <table>
       <thead>
           <tr>
               <th>Название</th>
@@ -13,10 +13,15 @@
       <tbody>
           {% for product in products %}
               <tr>
-                  <td>{{ product.name }}</td>
+                  <td><a href="{{ url_for('product_details', product_id=product.id)}}">{{ product.name }}</a></td>
                   <td>{{ product.description }}</td>
               </tr>
           {% endfor %}
       </tbody>
   </table>
+  <div class="button-container">
+    <button type="button" class="btn btn-success">Создать</button>
+    <button type="button" class="btn btn-primary">Редактировать</button>
+    <button type="button" class="btn btn-danger">Удалить</button>
+  </div>
 {% endblock content %}

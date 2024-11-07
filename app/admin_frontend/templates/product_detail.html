@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %} Продукты {% endblock title %}
+
+{% block content %}
+  <table>
+      <thead>
+          <tr>
+              <th>Название</th>
+              <th>Содержание</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for data in product_data %}
+              <tr>
+                <td>{{ data.name }}</td>
+                {% if data.url %}
+                  <td>{{ data.url }}</td>
+                {% elif data.media %}
+                  <td>{{ data.media }} {{ data.description }}</td>
+                {% elif data.description %}
+                  <td>{{ data.description }}</td>
+                {% endif %}
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+{% endblock content %}
