@@ -1,58 +1,101 @@
+header {
+    padding: 10px;
+}
+
 table {
-    width: 100%;
+    width: 60vw;
     border-collapse: collapse;
 }
 th, td {
-    padding: 20px;
+    padding: 10px;
     text-align: left;
     border: 1px solid #ddd;
     position: relative;
 }
-
 th {
     background-color: #f2f2f2;
 }
-
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-td::after, th::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 1px;
-    background-color: #ddd;
-}
-td:last-child::after, th:last-child::after {
-    display: none;
-}
-
-body {
-    margin: 0;
-}
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-}
 .page {
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 90vh;
+    margin-left: 15vw;
+    margin-bottom: 0;
 }
 
 .button-container {
     margin-top: 20px; 
   }
   
-  .button-container .btn {
+.button-container .btn {
     margin-right: 5px; 
   }
 
-.table-header {
-    text-align: center;
+/* Стили для сайдбара */
+.sidebar {
+    width: 15vw; 
+    height: 100vh; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    padding-top: 20px; 
+    background-color: #f8f9fa; 
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.btn-toggle-nav a {
+    display: block;
+    padding: 5px 10px;
+    margin: 5px 0;
+    color: #333;
+    text-decoration: none;
+}
+
+.btn-toggle-nav a:hover {
+    background-color: #f0f0f0; 
+}
+
+/* Стили для элементов подменю */
+.collapse {
+    display: none;
+    opacity: 0;
+    transform: translateX(20px); 
+
+}
+
+.collapse.show {
+    display: block; 
+    opacity: 1;
+}
+
+/* Для кнопок, открывающих подменю */
+.btn-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: none;
+    cursor: pointer;
+
+}
+
+.btn-toggle:hover {
+    background-color: #e9ecef;
+}
+
+.btn-toggle.collapsed {
+    background-color: #f8f9fa; 
+}
+
+.btn-toggle:focus {
+    outline: none; 
+}
+
+.btn-toggle.active {
+    background-color: #007bff; 
+    color: white;
 }
