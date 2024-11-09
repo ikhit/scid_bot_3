@@ -11,10 +11,14 @@
           </tr>
       </thead>
       <tbody>
-          {% for product in products %}
+          {% for data in data_list %}
               <tr>
-                  <td><a href="{{ url_for('get_product_details', id=product.id)}}">{{ product.name }}</a></td>
-                  <td>{{ product.description }}</td>
+                  <td>
+                    <a href="{{ url_for(details_url, id=data.id)}}">
+                        {% if data.name %} {{ data.name }} {% else %} {{ data.question }} {% endif %}
+                    </a>
+                </td>
+                  <td>{% if data.description %} {{ data.description }} {% elif data.url %} {{ data.url }} {% else %} {{ data.answer }} {% endif %}</td>
               </tr>
           {% endfor %}
       </tbody>

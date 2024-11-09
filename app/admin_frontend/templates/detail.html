@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %} {{ item.name }} {% endblock title %}
+
+{% block content %}
+  <div>
+    <h3>{% if item.name %}{{ item.name }} {% else %} {{ item.question }} {% endif %}</h3> <br>
+    <h4>
+      {% if item.description %}{{ item.description }} 
+      {% elif item.answer %} {{ item.answer}} 
+      {% else %} {{ item.url}} 
+      {% endif %}
+    </h4>
+    {% if item_data %}
+      <table>
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Содержание</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for data in item_data %}
+            <tr>
+              <td>{{ data.name }}</td>
+              {% if data.url %}
+                <td>{{ data.url }}</td>
+              {% elif data.media %}
+                <td>
+                  <img src="{{ data.media }}" alt="Image" width="100">
+                  {% if data.description %} {{ data.description }} {% endif %}
+                </td>
+              {% elif data.description %}
+                <td>{{ data.description }}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+  <div class="button-container">
+    <button type="button" class="btn btn-primary">Редактировать</button>
+    <button type="button" class="btn btn-danger">Удалить</button>
+  </div>
+{% endblock content %}
