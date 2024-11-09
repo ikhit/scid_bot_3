@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %} Продукты {% endblock title %}
+
+{% block title %} Другие проекты {% endblock %}
 
 {% block content %}
-  <table>
+    <table>
       <thead>
           <tr>
               <th>Название</th>
-              <th>Описание</th>
+              <th>Адрес ссылки</th>
           </tr>
       </thead>
       <tbody>
-          {% for product in products %}
+          {% for project in projects %}
               <tr>
-                  <td><a href="{{ url_for('get_product_details', id=product.id)}}">{{ product.name }}</a></td>
-                  <td>{{ product.description }}</td>
+                  <td><a href="{{ url_for('get_project_details', id=project.id) }}">{{ project.name }}</a></td>
+                  <td>{{ project.url }}</td>
               </tr>
           {% endfor %}
       </tbody>
@@ -22,4 +23,5 @@
   <div class="button-container">
     <button type="button" class="btn btn-success">Добавить</button>
   </div>
-{% endblock content %}
+
+{% endblock %}

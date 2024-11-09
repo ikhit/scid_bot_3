@@ -1,0 +1,16 @@
+{% extends "base.html "%}
+
+{% block title %} {{project.name}} {% endblock %}
+
+{% block content %}
+  <div>
+    <h3>{{ project.name }}</h3> <br>
+    <h4>{{ project.url }}</h4>
+
+  <div class="button-container">
+    <button type="button" class="btn btn-primary">Редактировать</button>
+    <button type="button" class="btn btn-danger">Удалить</button>
+  </div>
+{% endblock content %}
+
+
