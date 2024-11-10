@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %} Продукты {% endblock title %}
+{% block title %} {{ title }} {% endblock title %}
 
 {% block content %}
+  <div class="table-header">
+    <img src="/static/img/table.svg" alt="Table" height="40"> 
+    {{ title }} 
+  </div>
   <table>
       <thead>
           <tr>

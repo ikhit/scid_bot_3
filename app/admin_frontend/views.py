@@ -29,6 +29,7 @@ async def get_products(session: AsyncSession):
         "list.html",
         data_list=products,
         details_url="get_product_details",
+        title="Список продуктов и услуг",
     )
 
 
@@ -56,6 +57,7 @@ async def get_projects(session: AsyncSession):
         "list.html",
         data_list=projects,
         details_url="get_project_details",
+        title="Список дополнительных проектов",
     )
 
 
@@ -73,7 +75,10 @@ async def get_questions(session: AsyncSession):
         QuestionEnum.GENERAL_QUESTIONS, session
     )
     return await render_template(
-        "list.html", data_list=questions, details_url="get_question_details"
+        "list.html",
+        data_list=questions,
+        details_url="get_question_details",
+        title="Общие вопросы",
     )
 
 
@@ -94,6 +99,7 @@ async def get_product_problems(session: AsyncSession):
         "list.html",
         data_list=questions,
         details_url="get_product_problems_details",
+        title="Проблемы с продуктами",
     )
 
 
@@ -109,7 +115,7 @@ async def get_product_problems_details(session: AsyncSession, id: int):
 async def get_company_about(session: AsyncSession):
     infos = await company_info_crud.get_multi(session)
     return await render_template(
-        "list.html", data_list=infos, details_url="get_company_about_details"
+        "list.html", data_list=infos, details_url="get_company_about_details", title="Информация о компании"
     )
 
 
@@ -124,7 +130,7 @@ async def get_company_about_details(session: AsyncSession, id: int):
 @db_session
 async def get_managers(session):
     administration = await user_crud.get_manager_and_admin_list(session)
-    return await render_template("managers.html", data_list=administration)
+    return await render_template("managers.html", data_list=administration, title="Список администраторов")
 
 
 @app.route("/feedbacks")
