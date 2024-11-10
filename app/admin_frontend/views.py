@@ -8,6 +8,8 @@ from crud import (
     portfolio_crud,
     info_crud,
     company_info_crud,
+    user_crud,
+    feedback_crud,
 )
 from models.models import QuestionEnum
 from .utils import get_file_url, db_session
@@ -89,7 +91,9 @@ async def get_product_problems(session: AsyncSession):
         QuestionEnum.PROBLEMS_WITH_PRODUCTS, session
     )
     return await render_template(
-        "list.html", data_list=questions, details_url="get_product_problems_details"
+        "list.html",
+        data_list=questions,
+        details_url="get_product_problems_details",
     )
 
 
@@ -98,6 +102,7 @@ async def get_product_problems(session: AsyncSession):
 async def get_product_problems_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
     return await render_template("detail.html", item=question)
+
 
 @app.route("/about-company")
 @db_session
@@ -113,3 +118,21 @@ async def get_company_about(session: AsyncSession):
 async def get_company_about_details(session: AsyncSession, id: int):
     info = await company_info_crud.get(id, session)
     return await render_template("detail.html", item=info)
+
+
+@app.route("/managers")
+@db_session
+async def get_managers(session):
+    administration = await user_crud.get_manager_and_admin_list(session)
+    return await render_template("managers.html", data_list=administration)
+
+
+@app.route("/feedbacks")
+@db_session
+async def get_feedbacks(session):
+    feedbacks = await feedback_crud.get_multi(session)
+    return await render_template("feedbacks.html", data_list=feedbacks)
+
+
+@app.route("/specials")
+async def get_specials(): ...

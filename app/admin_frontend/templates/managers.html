@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %} Список менеджеров и админов {% endblock title %}
+
+{% block content %}
+  <table>
+      <thead>
+          <tr>
+              <th>Телеграм ID</th>
+              <th>Имя</th>
+              <th>Роль</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for data in data_list %}
+              <tr>
+                <td> {{ data.tg_id }} </td>
+                <td> {{ data.name }} </td>
+                <td> {{ data.role }} </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  <div class="button-container">
+    <button type="button" class="btn btn-success">Добавить</button>
+  </div>
+{% endblock content %}

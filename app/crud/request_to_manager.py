@@ -110,3 +110,13 @@ async def get_manager_stats(
         closed_requests_count.scalar_one(),
         last_closed_requests.scalar_one_or_none(),
     )
+
+
+async def get_closed_cases(session: AsyncSession) -> list[ContactManager]:
+    """Получить все закрытые заявки."""
+    closed_cases = await session.execute(
+        select(ContactManager)
+        .where(ContactManager.shipping_date_close)
+        .order_by(desc(ContactManager.shipping_date_close))
+    )
+    return closed_cases.scalars().all()
