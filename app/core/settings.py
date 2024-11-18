@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     db_port: str
     quart_app: str
     quart_debug: int
+    secret_key: str
 
     class Config:
         env_file = ".env"

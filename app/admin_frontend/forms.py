@@ -1,0 +1,63 @@
+from enum import Enum
+
+from quart_wtf import QuartForm, FileRequired
+from wtforms import (
+    StringField,
+    SubmitField,
+    URLField,
+    ValidationError,
+    TextAreaField,
+    FileField,
+)
+from wtforms.validators import DataRequired
+
+
+class ContentEnum(str, Enum):
+    TEXT = "Текст"
+    URL = "Ссылка"
+    MEDIA = "Картинка"
+
+
+def validate_name_len(form, field):
+    """Валидация длины названия для кнопок."""
+    if len(field.data.encode("utf-8")) >= 64:
+        raise ValidationError(
+            "Слишком длинное название (не поместится в кнопку)."
+        )
+
+
+class BaseForm(QuartForm):
+    name = StringField(
+        "Введите название проекта",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+            validate_name_len,
+        ],
+    )
+    submit = SubmitField("Добавить")
+
+
+class URLForm(BaseForm):
+    url = URLField(
+        "Добавьте ссылку на этот проект",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+        ],
+    )
+
+
+class TextForm(BaseForm):
+    description = TextAreaField(
+        "Введите список вопросов и ответ на них",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+        ],
+    )
+
+
+class MediaForm(TextForm):
+    media = FileField(
+        validators=[
+            FileRequired(),
+        ]
+    )

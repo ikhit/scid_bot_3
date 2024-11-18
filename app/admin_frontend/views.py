@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import render_template
+from quart import render_template, redirect, url_for
 
 from . import app
 from crud import (
@@ -11,8 +11,9 @@ from crud import (
     user_crud,
     feedback_crud,
 )
+from .forms import URLForm, TextForm
 from models.models import QuestionEnum
-from .utils import get_file_url, db_session
+from .utils import get_image_url, db_session
 
 
 @app.route("/", methods=["GET"])
@@ -30,6 +31,7 @@ async def get_products(session: AsyncSession):
         data_list=products,
         details_url="get_product_details",
         title="Список продуктов и услуг",
+        add_url="add_product",
     )
 
 
@@ -43,7 +45,7 @@ async def get_product_details(session: AsyncSession, id: int):
     product = await products_crud.get(id, session)
     for data in product_data:
         if data.media:
-            data.media = get_file_url(data.media)
+            data.media = get_image_url(data.media)
     return await render_template(
         "detail.html", item=product, item_data=product_data
     )
@@ -58,6 +60,7 @@ async def get_projects(session: AsyncSession):
         data_list=projects,
         details_url="get_project_details",
         title="Список дополнительных проектов",
+        add_url="add_project",
     )
 
 
@@ -79,6 +82,7 @@ async def get_questions(session: AsyncSession):
         data_list=questions,
         details_url="get_question_details",
         title="Общие вопросы",
+        add_url="add_project",
     )
 
 
@@ -100,6 +104,7 @@ async def get_product_problems(session: AsyncSession):
         data_list=questions,
         details_url="get_product_problems_details",
         title="Проблемы с продуктами",
+        add_url="add_project",
     )
 
 
@@ -115,7 +120,11 @@ async def get_product_problems_details(session: AsyncSession, id: int):
 async def get_company_about(session: AsyncSession):
     infos = await company_info_crud.get_multi(session)
     return await render_template(
-        "list.html", data_list=infos, details_url="get_company_about_details", title="Информация о компании"
+        "list.html",
+        data_list=infos,
+        details_url="get_company_about_details",
+        title="Информация о компании",
+        add_url="add_info",
     )
 
 
@@ -130,15 +139,101 @@ async def get_company_about_details(session: AsyncSession, id: int):
 @db_session
 async def get_managers(session):
     administration = await user_crud.get_manager_and_admin_list(session)
-    return await render_template("managers.html", data_list=administration, title="Список администраторов")
+    return await render_template(
+        "managers.html",
+        data_list=administration,
+        title="Список администраторов",
+    )
 
 
 @app.route("/feedbacks")
 @db_session
-async def get_feedbacks(session):
+async def get_feedbacks(session: AsyncSession):
     feedbacks = await feedback_crud.get_multi(session)
     return await render_template("feedbacks.html", data_list=feedbacks)
 
 
 @app.route("/specials")
 async def get_specials(): ...
+
+
+@app.route("/add-project", methods=["GET", "POST"])
+@db_session
+async def add_project(session: AsyncSession):
+    form = await URLForm().create_form()
+    if await form.validate_on_submit():
+        project_data = {
+            "name": form.name.data,
+            "url": form.url.data,
+        }
+        try:
+            project = await portfolio_crud.create(project_data, session)
+            return redirect(url_for("get_project_details", id=project.id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_url.html", form=form)
+
+
+@app.route("/add-info", methods=["GET", "POST"])
+@db_session
+async def add_info(session: AsyncSession):
+    form = await URLForm().create_form()
+    if await form.validate_on_submit():
+        info_data = {
+            "name": form.name.data,
+            "url": form.url.data,
+        }
+        try:
+            info = await company_info_crud.create(info_data, session)
+            return redirect(url_for("get_project_details", id=info.id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_url.html", form=form)
+
+
+@app.route("/add-product", methods=["GET", "POST"])
+@db_session
+async def add_product(session: AsyncSession):
+    form = await TextForm().create_form()
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name.data,
+            "description": form.description.data,
+        }
+        try:
+            product = await products_crud.create(data, session)
+            return redirect(url_for("get_product_details", id=product.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_description.html",
+        form=form,
+    )
+
+
+@app.route("/add-question", methods=["GET", "POST"])
+@db_session
+async def add_question(session: AsyncSession):
+    form = await TextForm().create_form()
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name.data,
+            "description": form.description.data,
+        }
+        try:
+            question = await info_crud.create(data, session)
+            return redirect(url_for("get_product_details", id=question.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_description.html",
+        form=form,
+    )
+
+
+@app.route("/product-delete/<int:id>")
+@db_session
+async def delete_product(session: AsyncSession, id: int):
+    product = await products_crud.get(id, session)
+    await products_crud.remove(product, session)
+    return redirect(url_for("get_projects"))

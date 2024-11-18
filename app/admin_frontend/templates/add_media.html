@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} Добавить продукт {% endblock %}
+
+{% block content %}
+<div class="row">
+    <h1>Добавить продукт</h1>
+    <div class="col-12 col-lg-7 my-5">
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.name(class="form-control form-control-lg py-3 mb-3", placeholder=form.name.label.text) }}<br />
+        {{ form.descripton(class="form-control form-control-lg py-3 mb-3", placeholder=form.descripton.label.text) }}<br />
+        {{ form.submit(class="btn btn-success") }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

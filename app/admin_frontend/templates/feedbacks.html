@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block content %}
+  <div class="table-header">
+    <img src="/static/img/table.svg" alt="Table" height="40"> 
+    {{ title }} 
+  </div>
+  <table>
+      <thead>
+          <tr>
+              <th>Отзыв</th>
+              <th>Рейтинг</th>
+              <th>Дата отзыва</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for data in data_list %}
+              <tr>
+                  <td>
+                    <a href="#">
+                        {{ data.feedback_text|truncate(30) }}
+                    </a>
+                </td>
+                <td> {{ data.rating }} </td>
+                <td> {{ data.feedback_date }} </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+{% endblock content %}
