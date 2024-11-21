@@ -28,7 +28,7 @@ def validate_name_len(form, field):
 
 class BaseForm(QuartForm):
     name = StringField(
-        "Введите название проекта",
+        "Введите название",
         validators=[
             DataRequired(message="Обязательное поле"),
             validate_name_len,
@@ -39,7 +39,7 @@ class BaseForm(QuartForm):
 
 class URLForm(BaseForm):
     url = URLField(
-        "Добавьте ссылку на этот проект",
+        "Добавьте ссылку",
         validators=[
             DataRequired(message="Обязательное поле"),
         ],
@@ -48,7 +48,7 @@ class URLForm(BaseForm):
 
 class TextForm(BaseForm):
     description = TextAreaField(
-        "Введите список вопросов и ответ на них",
+        "Введите текст",
         validators=[
             DataRequired(message="Обязательное поле"),
         ],

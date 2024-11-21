@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import render_template, redirect, url_for
+from quart import render_template
 
 from . import app
 from crud import (
@@ -11,9 +11,14 @@ from crud import (
     user_crud,
     feedback_crud,
 )
-from .forms import URLForm, TextForm
 from models.models import QuestionEnum
-from .utils import add_text_form, delete_item, get_image_url, db_session
+from .utils import (
+    add_text_form,
+    add_url_form,
+    delete_item,
+    get_image_url,
+    db_session,
+)
 
 
 @app.route("/", methods=["GET"])
@@ -160,61 +165,26 @@ async def get_specials(): ...
 @app.route("/add-project", methods=["GET", "POST"])
 @db_session
 async def add_project(session: AsyncSession):
-    form = await URLForm().create_form()
-    if await form.validate_on_submit():
-        project_data = {
-            "name": form.name.data,
-            "url": form.url.data,
-        }
-        try:
-            project = await portfolio_crud.create(project_data, session)
-            return redirect(url_for("get_project_details", id=project.id))
-        except Exception as e:
-            print(e)
-    return await render_template("add_url.html", form=form)
+    return await add_url_form(session, portfolio_crud, "get_project_details")
 
 
 @app.route("/add-info", methods=["GET", "POST"])
 @db_session
 async def add_info(session: AsyncSession):
-    form = await URLForm().create_form()
-    if await form.validate_on_submit():
-        info_data = {
-            "name": form.name.data,
-            "url": form.url.data,
-        }
-        try:
-            info = await company_info_crud.create(info_data, session)
-            return redirect(url_for("get_project_details", id=info.id))
-        except Exception as e:
-            print(e)
-    return await render_template("add_url.html", form=form)
+    return await add_url_form(session, info_crud, "get_company_about_details")
 
 
 @app.route("/add-product", methods=["GET", "POST"])
 @db_session
 async def add_product(session: AsyncSession):
-    form = await TextForm().create_form()
-    if await form.validate_on_submit():
-        data = {
-            "name": form.name.data,
-            "description": form.description.data,
-        }
-        try:
-            product = await products_crud.create(data, session)
-            return redirect(url_for("get_product_details", id=product.id))
-        except Exception as e:
-            print(e)
-    return await render_template(
-        "add_description.html",
-        form=form,
-    )
+    return await add_text_form(session, products_crud, "get_product_details")
 
 
 @app.route("/add-question", methods=["GET", "POST"])
 @db_session
 async def add_question(session: AsyncSession):
-    return await add_text_form(session, info_crud, )
+    return await add_text_form(session, info_crud, "get_question_details")
+
 
 @app.route("/product-delete/<int:id>")
 @db_session

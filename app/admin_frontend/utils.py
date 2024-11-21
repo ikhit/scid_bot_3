@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from quart import g, redirect, url_for, render_template
 import requests
 
-from app.admin_frontend.forms import TextForm
+from admin_frontend.forms import TextForm, URLForm
 from core.db import AsyncSessionLocal
 from core.settings import settings
 
@@ -61,7 +61,8 @@ async def delete_item(
         await model_crud.remove(item, session)
     return redirect(url_for(redirect_endpoint))
 
-async def add_text_form(session: AsyncSession, model_crud, details_url: str, form_url:str):
+
+async def add_text_form(session: AsyncSession, model_crud, details_url: str):
     form = await TextForm().create_form()
     if await form.validate_on_submit():
         data = {
@@ -74,6 +75,25 @@ async def add_text_form(session: AsyncSession, model_crud, details_url: str, for
         except Exception as e:
             print(e)
     return await render_template(
-        form_url,
+        "add_description.html",
         form=form,
     )
+
+
+async def add_url_form(
+    session: AsyncSession,
+    model_crud,
+    details_url: str,
+):
+    form = await URLForm().create_form()
+    if await form.validate_on_submit():
+        info_data = {
+            "name": form.name.data,
+            "url": form.url.data,
+        }
+        try:
+            item = await model_crud.create(info_data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_url.html", form=form)
