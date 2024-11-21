@@ -13,7 +13,7 @@ from crud import (
 )
 from .forms import URLForm, TextForm
 from models.models import QuestionEnum
-from .utils import get_image_url, db_session
+from .utils import add_text_form, delete_item, get_image_url, db_session
 
 
 @app.route("/", methods=["GET"])
@@ -214,26 +214,23 @@ async def add_product(session: AsyncSession):
 @app.route("/add-question", methods=["GET", "POST"])
 @db_session
 async def add_question(session: AsyncSession):
-    form = await TextForm().create_form()
-    if await form.validate_on_submit():
-        data = {
-            "name": form.name.data,
-            "description": form.description.data,
-        }
-        try:
-            question = await info_crud.create(data, session)
-            return redirect(url_for("get_product_details", id=question.id))
-        except Exception as e:
-            print(e)
-    return await render_template(
-        "add_description.html",
-        form=form,
-    )
-
+    return await add_text_form(session, info_crud, )
 
 @app.route("/product-delete/<int:id>")
 @db_session
 async def delete_product(session: AsyncSession, id: int):
-    product = await products_crud.get(id, session)
-    await products_crud.remove(product, session)
-    return redirect(url_for("get_projects"))
+    return await delete_item(session, products_crud, id, "get_products")
+
+
+@app.route("/question-delete/<int:id>")
+@db_session
+async def delete_question(session: AsyncSession, id: int):
+    return await delete_item(session, info_crud, id, "get_questions")
+
+
+@app.route("/question-delete/<int:id>")
+@db_session
+async def delete_about_combapy(session: AsyncSession, id: int):
+    return await delete_item(
+        session, company_info_crud, id, "get_company_about"
+    )

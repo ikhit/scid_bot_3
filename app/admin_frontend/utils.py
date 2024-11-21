@@ -1,9 +1,11 @@
 from functools import wraps
 from io import BytesIO
 
-from quart import g
+from sqlalchemy.ext.asyncio import AsyncSession
+from quart import g, redirect, url_for, render_template
 import requests
 
+from app.admin_frontend.forms import TextForm
 from core.db import AsyncSessionLocal
 from core.settings import settings
 
@@ -49,3 +51,29 @@ def db_session(func):
                 del g.db_session
 
     return wrapper
+
+
+async def delete_item(
+    session: AsyncSession, model_crud, id: int, redirect_endpoint: str
+):
+    item = await model_crud.get(id, session)
+    if item:
+        await model_crud.remove(item, session)
+    return redirect(url_for(redirect_endpoint))
+
+async def add_text_form(session: AsyncSession, model_crud, details_url: str, form_url:str):
+    form = await TextForm().create_form()
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name.data,
+            "description": form.description.data,
+        }
+        try:
+            item = await model_crud.create(data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        form_url,
+        form=form,
+    )
