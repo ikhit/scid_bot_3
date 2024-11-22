@@ -13,6 +13,7 @@ from crud import (
 )
 from models.models import QuestionEnum
 from .utils import (
+    add_media_form,
     add_text_form,
     add_url_form,
     delete_item,
@@ -204,3 +205,9 @@ async def delete_about_combapy(session: AsyncSession, id: int):
     return await delete_item(
         session, company_info_crud, id, "get_company_about"
     )
+
+
+@app.route("/products/<int:id>/add-media", methods=["GET", "POST"])
+@db_session
+async def add_media(session: AsyncSession, id: int):
+    return await add_media_form(session, "get_product_details", id)

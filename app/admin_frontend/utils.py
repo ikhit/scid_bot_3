@@ -5,9 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from quart import g, redirect, url_for, render_template
 import requests
 
-from admin_frontend.forms import TextForm, URLForm
+from admin_frontend.forms import MediaForm, TextForm, URLForm
 from core.db import AsyncSessionLocal
 from core.settings import settings
+from crud import category_product_crud
 
 
 def get_image_url(file_id: str) -> str:
@@ -24,6 +25,7 @@ def get_image_url(file_id: str) -> str:
 def send_image_to_telegram(image_data: bytes) -> str:
     """
     Отправляет изображение (в формате байтов) на сервер Telegram и возвращает file_id.
+    Также удаляет сообщение, которое бот отправляет с изображением.
     """
     url = f"https://api.telegram.org/bot{settings.bot_token}/sendPhoto"
     files = {"photo": ("image.jpg", BytesIO(image_data), "image/jpeg")}
@@ -31,8 +33,18 @@ def send_image_to_telegram(image_data: bytes) -> str:
     response = requests.post(url, files=files, data=data)
     result = response.json()
     if result["ok"]:
-        return result["result"]["photo"][0]["file_id"]
-    return
+        file_id = result["result"]["photo"][0]["file_id"]
+        message_id = result["result"]["message_id"]
+        delete_url = (
+            f"https://api.telegram.org/bot{settings.bot_token}/deleteMessage"
+        )
+        delete_data = {
+            "chat_id": settings.telegram_chat_ids,
+            "message_id": message_id,
+        }
+        requests.post(delete_url, data=delete_data)
+        return file_id
+    return 
 
 
 def db_session(func):
@@ -97,3 +109,26 @@ async def add_url_form(
         except Exception as e:
             print(e)
     return await render_template("add_url.html", form=form)
+
+
+async def add_media_form(
+    session: AsyncSession,
+    details_url: str,
+    product_id :int
+):
+    form = await MediaForm().create_form()
+    if await form.validate_on_submit():
+        image_data = form.media.data.read()
+        media = send_image_to_telegram(image_data)
+        info_data = {
+            "name": form.name.data,
+            "media": media,
+            "description": form.description.data,
+            "product_id": product_id
+        }
+        try:
+            await category_product_crud.create(info_data, session)
+            return redirect(url_for(details_url, id=product_id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_media.html", form=form)

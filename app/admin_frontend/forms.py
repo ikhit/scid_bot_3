@@ -9,7 +9,7 @@ from wtforms import (
     TextAreaField,
     FileField,
 )
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional
 
 
 class ContentEnum(str, Enum):
@@ -55,9 +55,15 @@ class TextForm(BaseForm):
     )
 
 
-class MediaForm(TextForm):
+class MediaForm(BaseForm):
     media = FileField(
         validators=[
             FileRequired(),
         ]
+    )
+    description = TextAreaField(
+        "Введите текст",
+        validators=[
+            Optional(),
+        ],
     )
