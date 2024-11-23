@@ -22,7 +22,7 @@
                         {% if data.name %} {{ data.name }} {% else %} {{ data.question }} {% endif %}
                     </a>
                 </td>
-                  <td>{% if data.description %} {{ data.description }} {% elif data.url %} {{ data.url }} {% else %} {{ data.answer }} {% endif %}</td>
+                  <td>{% if data.description %} {{ data.description|truncate(100) }} {% elif data.url %} <a href={{ data.url }}>{{ data.url }}</a> {% else %} {{ data.answer|truncate(100) }} {% endif %}</td>
               </tr>
           {% endfor %}
       </tbody>

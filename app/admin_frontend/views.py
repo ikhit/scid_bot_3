@@ -1,6 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from quart import render_template
 
+from crud.request_to_manager import (
+    get_all_manager_requests,
+    get_all_support_requests,
+    get_closed_cases,
+)
+
 from . import app
 from crud import (
     products_crud,
@@ -13,7 +19,10 @@ from crud import (
 )
 from models.models import QuestionEnum
 from .utils import (
-    add_media_form,
+    add_product_media_form,
+    add_product_text_form,
+    add_product_url_form,
+    add_questions,
     add_text_form,
     add_url_form,
     delete_item,
@@ -53,7 +62,10 @@ async def get_product_details(session: AsyncSession, id: int):
         if data.media:
             data.media = get_image_url(data.media)
     return await render_template(
-        "detail.html", item=product, item_data=product_data
+        "bot_data/product_details.html",
+        item=product,
+        item_data=product_data,
+        delete_url="delete_product",
     )
 
 
@@ -74,7 +86,9 @@ async def get_projects(session: AsyncSession):
 @db_session
 async def get_project_details(session: AsyncSession, id: int):
     project = await portfolio_crud.get(id, session)
-    return await render_template("detail.html", item=project)
+    return await render_template(
+        "detail.html", item=project, delete_url="delete_project"
+    )
 
 
 @app.route("/questions")
@@ -88,7 +102,7 @@ async def get_questions(session: AsyncSession):
         data_list=questions,
         details_url="get_question_details",
         title="Общие вопросы",
-        add_url="add_project",
+        add_url="add_question",
     )
 
 
@@ -96,7 +110,9 @@ async def get_questions(session: AsyncSession):
 @db_session
 async def get_question_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
-    return await render_template("detail.html", item=question)
+    return await render_template(
+        "detail.html", item=question, delete_url="delete_question"
+    )
 
 
 @app.route("/problems")
@@ -110,7 +126,7 @@ async def get_product_problems(session: AsyncSession):
         data_list=questions,
         details_url="get_product_problems_details",
         title="Проблемы с продуктами",
-        add_url="add_project",
+        add_url="add_problems_with_product",
     )
 
 
@@ -118,7 +134,9 @@ async def get_product_problems(session: AsyncSession):
 @db_session
 async def get_product_problems_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
-    return await render_template("detail.html", item=question)
+    return await render_template(
+        "detail.html", item=question, delete_url="delete_question"
+    )
 
 
 @app.route("/about-company")
@@ -138,7 +156,9 @@ async def get_company_about(session: AsyncSession):
 @db_session
 async def get_company_about_details(session: AsyncSession, id: int):
     info = await company_info_crud.get(id, session)
-    return await render_template("detail.html", item=info)
+    return await render_template(
+        "detail.html", item=info, delete_url="delete_about_company"
+    )
 
 
 @app.route("/managers")
@@ -169,7 +189,7 @@ async def add_project(session: AsyncSession):
     return await add_url_form(session, portfolio_crud, "get_project_details")
 
 
-@app.route("/add-info", methods=["GET", "POST"])
+@app.route("/add-about-company", methods=["GET", "POST"])
 @db_session
 async def add_info(session: AsyncSession):
     return await add_url_form(session, info_crud, "get_company_about_details")
@@ -184,7 +204,21 @@ async def add_product(session: AsyncSession):
 @app.route("/add-question", methods=["GET", "POST"])
 @db_session
 async def add_question(session: AsyncSession):
-    return await add_text_form(session, info_crud, "get_question_details")
+    return await add_questions(
+        session,
+        QuestionEnum.GENERAL_QUESTIONS,
+        "get_question_details",
+    )
+
+
+@app.route("/add-problems", methods=["GET", "POST"])
+@db_session
+async def add_problems_with_product(session: AsyncSession):
+    return await add_questions(
+        session,
+        QuestionEnum.PROBLEMS_WITH_PRODUCTS,
+        "get_question_details",
+    )
 
 
 @app.route("/product-delete/<int:id>")
@@ -193,15 +227,23 @@ async def delete_product(session: AsyncSession, id: int):
     return await delete_item(session, products_crud, id, "get_products")
 
 
+@app.route("/project-delete/<int:id>")
+@db_session
+async def delete_project(session: AsyncSession, id: int):
+    return await delete_item(
+        session, portfolio_crud, id, "get_project_details"
+    )
+
+
 @app.route("/question-delete/<int:id>")
 @db_session
 async def delete_question(session: AsyncSession, id: int):
     return await delete_item(session, info_crud, id, "get_questions")
 
 
-@app.route("/question-delete/<int:id>")
+@app.route("/about-company-delete/<int:id>")
 @db_session
-async def delete_about_combapy(session: AsyncSession, id: int):
+async def delete_about_company(session: AsyncSession, id: int):
     return await delete_item(
         session, company_info_crud, id, "get_company_about"
     )
@@ -209,5 +251,46 @@ async def delete_about_combapy(session: AsyncSession, id: int):
 
 @app.route("/products/<int:id>/add-media", methods=["GET", "POST"])
 @db_session
-async def add_media(session: AsyncSession, id: int):
-    return await add_media_form(session, "get_product_details", id)
+async def add_product_media(session: AsyncSession, id: int):
+    return await add_product_media_form(session, "get_product_details", id)
+
+
+@app.route("/products/<int:id>/add-url", methods=["GET", "POST"])
+@db_session
+async def add_product_url(session: AsyncSession, id: int):
+    return await add_product_url_form(session, "get_product_details", id)
+
+
+@app.route("/products/<int:id>/add-text", methods=["GET", "POST"])
+@db_session
+async def add_product_text(session: AsyncSession, id: int):
+    return await add_product_text_form(session, "get_product_details", id)
+
+
+@app.route("/manager-callbacks")
+@db_session
+async def get_manager_callbacks(session: AsyncSession):
+    callbacks = await get_all_manager_requests(session)
+    return await render_template(
+        "callbacks.html",
+        data_list=callbacks,
+        title="Заявки на обратный звонок",
+    )
+
+
+@app.route("/support-callbacks")
+@db_session
+async def get_support_requests(session: AsyncSession):
+    callbacks = await get_all_support_requests(session)
+    return await render_template(
+        "callbacks.html", data_list=callbacks, title="Заявки на техподдержку"
+    )
+
+
+@app.route("/closed-cases")
+@db_session
+async def get_all_closed_cases(session: AsyncSession):
+    closed_cases = await get_closed_cases(session)
+    return await render_template(
+        "cases.html", data_list=closed_cases, title="Закрытые заявки"
+    )

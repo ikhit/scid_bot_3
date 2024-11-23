@@ -1,16 +1,13 @@
-{% extends "base.html" %}
+{% extends "detail.html" %}
 
 {% block title %} {{ item.name }} {% endblock title %}
 
 {% block content %}
   <div>
-    <h3>{% if item.name %}{{ item.name }} {% else %} {{ item.question }} {% endif %}</h3> <br>
+    <h3> {{ item.name }} </h3> <br>
     <h4>
-      {% if item.description %}{{ item.description | nl2br | safe }} 
-      {% elif item.answer %} {{ item.answer | nl2br | safe  }} 
-      {% else %} {{ item.url }} 
-      {% endif %}
-    </h4>
+      {{ item.description }} 
+    </h4> <br>
     {% if item_data %}
       <table>
         <thead>
@@ -24,14 +21,14 @@
             <tr>
               <td>{{ data.name }}</td>
               {% if data.url %}
-                <td><a href={{ data.url }}>{{ data.url }}</a></td>
+                <td><a href={{data.url}}>{{ data.url }}</a></td>
               {% elif data.media %}
                 <td>
                   <img src="{{ data.media }}" alt="Image" width="100">
-                  {% if data.description %} {{ data.description | nl2br | safe }} {% endif %}
+                  {% if data.description %} {{ data.description }} {% endif %}
                 </td>
               {% elif data.description %}
-                <td>{{ data.description | nl2br | safe }}</td>
+                <td>{{ data.description }}</td>
               {% endif %}
             </tr>
           {% endfor %}
@@ -42,6 +39,9 @@
 
   <div class="button-container">
     <button type="button" class="btn btn-primary">Редактировать</button>
-    <a href="{{url_for(delete_url, id=item.id)}}" class="btn btn-danger">Удалить</a>
+    <a href="{{url_for('add_product_url', id=item.id)}}" class="btn btn-success">Добавить ссылку</a>
+    <a href="{{url_for('add_product_text', id=item.id)}}" class="btn btn-success">Добавить текст</a>
+    <a href="{{url_for('add_product_media', id=item.id)}}" class="btn btn-success">Добавить картинку</a>
+    <a href="{{url_for('delete_product', id=item.id)}}" class="btn btn-danger">Удалить</a>
   </div>
 {% endblock content %}

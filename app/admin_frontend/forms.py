@@ -18,7 +18,7 @@ class ContentEnum(str, Enum):
     MEDIA = "Картинка"
 
 
-def validate_name_len(form, field):
+def validate_button_len(form, field):
     """Валидация длины названия для кнопок."""
     if len(field.data.encode("utf-8")) >= 64:
         raise ValidationError(
@@ -31,7 +31,7 @@ class BaseForm(QuartForm):
         "Введите название",
         validators=[
             DataRequired(message="Обязательное поле"),
-            validate_name_len,
+            validate_button_len,
         ],
     )
     submit = SubmitField("Добавить")
@@ -67,3 +67,20 @@ class MediaForm(BaseForm):
             Optional(),
         ],
     )
+
+
+class QuestionForm(QuartForm):
+    question = StringField(
+        "Введите название категории вопросов",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+            validate_button_len,
+        ],
+    )
+    answer = TextAreaField(
+        "Введите список вопросов и ответов",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+        ],
+    )
+    submit = SubmitField("Добавить")

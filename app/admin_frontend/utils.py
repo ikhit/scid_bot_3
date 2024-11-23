@@ -5,10 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from quart import g, redirect, url_for, render_template
 import requests
 
-from admin_frontend.forms import MediaForm, TextForm, URLForm
+from admin_frontend.forms import MediaForm, QuestionForm, TextForm, URLForm
 from core.db import AsyncSessionLocal
 from core.settings import settings
-from crud import category_product_crud
+from crud import category_product_crud, info_crud
 
 
 def get_image_url(file_id: str) -> str:
@@ -44,7 +44,7 @@ def send_image_to_telegram(image_data: bytes) -> str:
         }
         requests.post(delete_url, data=delete_data)
         return file_id
-    return 
+    return
 
 
 def db_session(func):
@@ -111,10 +111,8 @@ async def add_url_form(
     return await render_template("add_url.html", form=form)
 
 
-async def add_media_form(
-    session: AsyncSession,
-    details_url: str,
-    product_id :int
+async def add_product_media_form(
+    session: AsyncSession, details_url: str, product_id: int
 ):
     form = await MediaForm().create_form()
     if await form.validate_on_submit():
@@ -124,7 +122,7 @@ async def add_media_form(
             "name": form.name.data,
             "media": media,
             "description": form.description.data,
-            "product_id": product_id
+            "product_id": product_id,
         }
         try:
             await category_product_crud.create(info_data, session)
@@ -132,3 +130,60 @@ async def add_media_form(
         except Exception as e:
             print(e)
     return await render_template("add_media.html", form=form)
+
+
+async def add_product_url_form(
+    session: AsyncSession, details_url: str, product_id: int
+):
+    form = await URLForm().create_form()
+    if await form.validate_on_submit():
+        info_data = {
+            "name": form.name.data,
+            "url": form.url.data,
+            "product_id": product_id,
+        }
+        try:
+            await category_product_crud.create(info_data, session)
+            return redirect(url_for(details_url, id=product_id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_url.html", form=form)
+
+
+async def add_product_text_form(
+    session: AsyncSession, details_url: str, product_id: int
+):
+    form = await TextForm().create_form()
+    if await form.validate_on_submit():
+        info_data = {
+            "name": form.name.data,
+            "description": form.description.data,
+            "product_id": product_id,
+        }
+        try:
+            await category_product_crud.create(info_data, session)
+            return redirect(url_for(details_url, id=product_id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_description.html", form=form)
+
+
+async def add_questions(
+    session: AsyncSession, question_category: str, details_url: str
+):
+    form = await QuestionForm().create_form()
+    if await form.validate_on_submit():
+        data = {
+            "question": form.question.data,
+            "answer": form.answer.data,
+            "question_type": question_category,
+        }
+        try:
+            item = await info_crud.create(data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_question.html",
+        form=form,
+    )

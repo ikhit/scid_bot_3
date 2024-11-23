@@ -22,9 +22,9 @@
         <label for="requests-toggle" class="btn btn-toggle">Заявки</label>
         <div class="collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Обратный звонок от менеджера</a></li>
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Закрытые заявки</a></li>
+                <li><a href="{{ url_for('get_manager_callbacks')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Обратный звонок от менеджера</a></li>
+                <li><a href="{{ url_for('get_support_requests')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
+                <li><a href="{{ url_for('get_all_closed_cases')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Закрытые заявки</a></li>
             </ul>
         </div>
       </li>
