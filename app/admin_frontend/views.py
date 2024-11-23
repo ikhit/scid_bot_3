@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import render_template
+from quart import render_template, redirect, url_for
 
+from admin_frontend.forms import SetTimer
+from redis_db.connect import get_redis_connection
 from crud.request_to_manager import (
     get_all_manager_requests,
     get_all_support_requests,
@@ -179,8 +181,20 @@ async def get_feedbacks(session: AsyncSession):
     return await render_template("feedbacks.html", data_list=feedbacks)
 
 
-@app.route("/specials")
-async def get_specials(): ...
+@app.route("/specials", methods=["GET", "POST"])
+async def get_specials():
+    redis_client = await get_redis_connection()
+    timer = await redis_client.get("timeout")
+    await redis_client.close()
+    form = await SetTimer().create_form()
+    if await form.validate_on_submit():
+        try:
+            await redis_client.set("timeout", form.timer.data)
+            await redis_client.close()
+        except Exception as e:
+            print(e)
+        return redirect(url_for("get_specials"))
+    return await render_template("specials.html", timer=timer, form=form)
 
 
 @app.route("/add-project", methods=["GET", "POST"])

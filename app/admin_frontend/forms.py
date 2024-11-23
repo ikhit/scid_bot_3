@@ -8,6 +8,7 @@ from wtforms import (
     ValidationError,
     TextAreaField,
     FileField,
+    IntegerField,
 )
 from wtforms.validators import DataRequired, Optional
 
@@ -84,3 +85,13 @@ class QuestionForm(QuartForm):
         ],
     )
     submit = SubmitField("Добавить")
+
+
+class SetTimer(QuartForm):
+    timer = IntegerField(
+        "Введите значение таймера в секундах",
+        validators=[
+            DataRequired(message="Обязательное поле"),
+        ],
+    )
+    submit = SubmitField("Установить")
