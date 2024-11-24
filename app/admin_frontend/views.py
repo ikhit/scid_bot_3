@@ -30,6 +30,7 @@ from .utils import (
     delete_item,
     get_image_url,
     db_session,
+    update_text_form,
 )
 
 
@@ -235,13 +236,21 @@ async def add_problems_with_product(session: AsyncSession):
     )
 
 
-@app.route("/product-delete/<int:id>")
+@app.route("/products/<int:id>/delete")
 @db_session
 async def delete_product(session: AsyncSession, id: int):
     return await delete_item(session, products_crud, id, "get_products")
 
 
-@app.route("/project-delete/<int:id>")
+@app.route("/products/<int:id>/update", methods=["GET", "POST"])
+@db_session
+async def update_product(session: AsyncSession, id: int):
+    return await update_text_form(
+        session, products_crud, id, "get_product_details"
+    )
+
+
+@app.route("/projects/<int:id>/delete")
 @db_session
 async def delete_project(session: AsyncSession, id: int):
     return await delete_item(
@@ -249,13 +258,13 @@ async def delete_project(session: AsyncSession, id: int):
     )
 
 
-@app.route("/question-delete/<int:id>")
+@app.route("/questions/<int:id>/delete")
 @db_session
 async def delete_question(session: AsyncSession, id: int):
     return await delete_item(session, info_crud, id, "get_questions")
 
 
-@app.route("/about-company-delete/<int:id>")
+@app.route("/about-company/<int:id>/delete")
 @db_session
 async def delete_about_company(session: AsyncSession, id: int):
     return await delete_item(

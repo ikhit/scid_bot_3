@@ -12,6 +12,7 @@
       <table>
         <thead>
           <tr>
+            <th>Редактировать</th>
             <th>Название</th>
             <th>Содержание</th>
           </tr>
@@ -36,9 +37,8 @@
       </table>
     {% endif %}
   </div>
-
   <div class="button-container">
-    <button type="button" class="btn btn-primary">Редактировать</button>
+    <a href="{{url_for('update_product', id=item.id)}}" class="btn btn-primary">Редактировать</a>
     <a href="{{url_for('add_product_url', id=item.id)}}" class="btn btn-success">Добавить ссылку</a>
     <a href="{{url_for('add_product_text', id=item.id)}}" class="btn btn-success">Добавить текст</a>
     <a href="{{url_for('add_product_media', id=item.id)}}" class="btn btn-success">Добавить картинку</a>

@@ -187,3 +187,78 @@ async def add_questions(
         "add_question.html",
         form=form,
     )
+
+
+async def update_text_form(
+    session: AsyncSession, model_crud, id: str, details_url: str
+):
+    form = await TextForm().create_form()
+    item = await model_crud.get(id, session)
+    if not form.is_submitted:
+        form.name.data = item.name
+        form.description.data = item.description
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name.data,
+            "description": form.description.data,
+        }
+        try:
+            item = await model_crud.update(item, data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_description.html",
+        form=form,
+    )
+
+
+async def update_url_form(
+    session: AsyncSession, model_crud, id: str, details_url: str
+):
+    form = await URLForm().create_form()
+    item = await model_crud.get(id, session)
+    if not form.is_submitted:
+        form.name.data = item.name
+        form.url.data = item.url
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name.data,
+            "url": form.description.data,
+        }
+        try:
+            item = await model_crud.update(item, data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_url.html",
+        form=form,
+    )
+
+
+async def update_media_form(
+    session: AsyncSession, model_crud, id: str, details_url: str
+):
+    form = await MediaForm().create_form()
+    item = await model_crud.get(id, session)
+    if not form.is_submitted:
+        form.name.data = item.name
+        image = get_image_url(item.media)
+    if await form.validate_on_submit():
+        image_data = form.media.data.read()
+        media = send_image_to_telegram(image_data)
+        data = {
+            "name": form.name.data,
+            "media": media,
+        }
+        try:
+            item = await model_crud.update(item, data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_media.html",
+        form=form,
+        image=image,
+    )
