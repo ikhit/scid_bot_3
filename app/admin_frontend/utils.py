@@ -70,7 +70,7 @@ async def delete_item(
     model_crud,
     id: int,
     redirect_endpoint: str,
-    redirect_id: int | None,
+    redirect_id: int | None = None,
 ):
     item = await model_crud.get(id, session)
     if item:
@@ -198,7 +198,7 @@ async def update_text_form(
     model_crud,
     id: str,
     details_url: str,
-    details_id: int | None,
+    details_id: int | None = None,
 ):
     form = await TextForm().create_form()
     item = await model_crud.get(id, session)
@@ -228,7 +228,7 @@ async def update_url_form(
     model_crud,
     id: str,
     details_url: str,
-    details_id: int | None,
+    details_id: int | None = None,
 ):
     form = await URLForm().create_form()
     item = await model_crud.get(id, session)
@@ -238,7 +238,7 @@ async def update_url_form(
     if await form.validate_on_submit():
         data = {
             "name": form.name.data,
-            "url": form.description.data,
+            "url": form.url.data,
         }
         try:
             item = await model_crud.update(item, data, session)
@@ -258,7 +258,7 @@ async def update_media_form(
     model_crud,
     id: str,
     details_url: str,
-    details_id: int | None,
+    details_id: int | None = None,
 ):
     form = await MediaForm().create_form()
     item = await model_crud.get(id, session)
@@ -283,4 +283,30 @@ async def update_media_form(
         "add_media.html",
         form=form,
         image=image,
+    )
+
+
+async def update_questions_form(
+    session: AsyncSession,
+    id: str,
+    details_url: str,
+):
+    form = await QuestionForm().create_form()
+    item = await info_crud.get(id, session)
+    if not form.is_submitted:
+        form.question.data = item.question
+        form.answer.data = item.answer
+    if await form.validate_on_submit():
+        data = {
+            "question": form.question.data,
+            "answer": form.answer.data,
+        }
+        try:
+            item = await info_crud.update(item, data, session)
+            return redirect(url_for(details_url, id=item.id))
+        except Exception as e:
+            print(e)
+    return await render_template(
+        "add_question.html",
+        form=form,
     )

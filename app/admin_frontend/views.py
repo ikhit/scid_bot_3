@@ -31,6 +31,7 @@ from .utils import (
     get_image_url,
     db_session,
     update_media_form,
+    update_questions_form,
     update_text_form,
     update_url_form,
 )
@@ -92,7 +93,10 @@ async def get_projects(session: AsyncSession):
 async def get_project_details(session: AsyncSession, id: int):
     project = await portfolio_crud.get(id, session)
     return await render_template(
-        "detail.html", item=project, delete_url="delete_project"
+        "detail.html",
+        item=project,
+        delete_url="delete_project",
+        update_url="update_project",
     )
 
 
@@ -116,7 +120,10 @@ async def get_questions(session: AsyncSession):
 async def get_question_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
     return await render_template(
-        "detail.html", item=question, delete_url="delete_question"
+        "detail.html",
+        item=question,
+        delete_url="delete_question",
+        update_url="update_question",
     )
 
 
@@ -140,7 +147,10 @@ async def get_product_problems(session: AsyncSession):
 async def get_product_problems_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
     return await render_template(
-        "detail.html", item=question, delete_url="delete_question"
+        "detail.html",
+        item=question,
+        delete_url="delete_question",
+        update_url="update_problems",
     )
 
 
@@ -162,7 +172,10 @@ async def get_company_about(session: AsyncSession):
 async def get_company_about_details(session: AsyncSession, id: int):
     info = await company_info_crud.get(id, session)
     return await render_template(
-        "detail.html", item=info, delete_url="delete_about_company"
+        "detail.html",
+        item=info,
+        delete_url="delete_about_company",
+        update_url="update_about_company",
     )
 
 
@@ -363,4 +376,34 @@ async def delete_category(session: AsyncSession, id: int):
         id,
         "get_product_details",
         category.product_id,
+    )
+
+
+@app.route("/update-about-company/<int:id>", methods=["GET", "POST"])
+@db_session
+async def update_about_company(session: AsyncSession, id: int):
+    return await update_url_form(
+        session, company_info_crud, id, "get_company_about_details"
+    )
+
+
+@app.route("/update-project/<int:id>", methods=["GET", "POST"])
+@db_session
+async def update_project(session: AsyncSession, id: int):
+    return await update_url_form(
+        session, portfolio_crud, id, "get_project_details"
+    )
+
+
+@app.route("/upate-question/<int:id>", methods=["GET", "POST"])
+@db_session
+async def update_question(session: AsyncSession, id: int):
+    return await update_questions_form(session, id, "get_question_details")
+
+
+@app.route("/upate-problems/<int:id>", methods=["GET", "POST"])
+@db_session
+async def update_problems(session: AsyncSession, id: int):
+    return await update_questions_form(
+        session, id, "add_problems_with_product"
     )
