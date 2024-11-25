@@ -9,11 +9,11 @@
       <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ form.name(class="form-control form-control-lg py-3 mb-3", placeholder=form.name.label.text) }}<br />
-        {% if media %}
-          <h4> Текущая картинка </h4>
-          <img src="{{ data.media }}" alt="Image" width="100">
-        {% ednif %}
         {{ form.description(class="form-control form-control-lg py-3 mb-3", placeholder=form.description.label.text) }}<br />
+        {% if image %}
+          <h4> Текущая картинка </h4>
+          <img src={{image}} alt="Image" width="200"> <br> <br>
+        {% endif %}
         <div class="mb-3">
           {{ form.media(class="form-control form-control-lg py-3 mb-3") }}
         </div>

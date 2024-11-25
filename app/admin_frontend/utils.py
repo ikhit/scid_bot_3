@@ -66,12 +66,16 @@ def db_session(func):
 
 
 async def delete_item(
-    session: AsyncSession, model_crud, id: int, redirect_endpoint: str
+    session: AsyncSession,
+    model_crud,
+    id: int,
+    redirect_endpoint: str,
+    redirect_id: int | None,
 ):
     item = await model_crud.get(id, session)
     if item:
         await model_crud.remove(item, session)
-    return redirect(url_for(redirect_endpoint))
+    return redirect(url_for(redirect_endpoint, id=redirect_id))
 
 
 async def add_text_form(session: AsyncSession, model_crud, details_url: str):
@@ -190,7 +194,11 @@ async def add_questions(
 
 
 async def update_text_form(
-    session: AsyncSession, model_crud, id: str, details_url: str
+    session: AsyncSession,
+    model_crud,
+    id: str,
+    details_url: str,
+    details_id: int | None,
 ):
     form = await TextForm().create_form()
     item = await model_crud.get(id, session)
@@ -204,7 +212,9 @@ async def update_text_form(
         }
         try:
             item = await model_crud.update(item, data, session)
-            return redirect(url_for(details_url, id=item.id))
+            return redirect(
+                url_for(details_url, id=details_id if details_id else item.id)
+            )
         except Exception as e:
             print(e)
     return await render_template(
@@ -214,7 +224,11 @@ async def update_text_form(
 
 
 async def update_url_form(
-    session: AsyncSession, model_crud, id: str, details_url: str
+    session: AsyncSession,
+    model_crud,
+    id: str,
+    details_url: str,
+    details_id: int | None,
 ):
     form = await URLForm().create_form()
     item = await model_crud.get(id, session)
@@ -228,7 +242,9 @@ async def update_url_form(
         }
         try:
             item = await model_crud.update(item, data, session)
-            return redirect(url_for(details_url, id=item.id))
+            return redirect(
+                url_for(details_url, id=details_id if details_id else item.id)
+            )
         except Exception as e:
             print(e)
     return await render_template(
@@ -238,7 +254,11 @@ async def update_url_form(
 
 
 async def update_media_form(
-    session: AsyncSession, model_crud, id: str, details_url: str
+    session: AsyncSession,
+    model_crud,
+    id: str,
+    details_url: str,
+    details_id: int | None,
 ):
     form = await MediaForm().create_form()
     item = await model_crud.get(id, session)
@@ -254,7 +274,9 @@ async def update_media_form(
         }
         try:
             item = await model_crud.update(item, data, session)
-            return redirect(url_for(details_url, id=item.id))
+            return redirect(
+                url_for(details_url, id=details_id if details_id else item.id)
+            )
         except Exception as e:
             print(e)
     return await render_template(

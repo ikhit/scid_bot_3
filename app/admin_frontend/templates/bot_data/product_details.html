@@ -9,17 +9,24 @@
       {{ item.description }} 
     </h4> <br>
     {% if item_data %}
+    <div class="row">
       <table>
         <thead>
           <tr>
             <th>Редактировать</th>
             <th>Название</th>
             <th>Содержание</th>
+            <th>Удалить</th>
           </tr>
         </thead>
         <tbody>
           {% for data in item_data %}
             <tr>
+              <td class="col-1 icon"> 
+                <a href="{{ url_for('update_category', id=data.id)}}"> 
+                  <img src="/static/img/edit.svg" alt="Image" width="25">
+                </a> 
+              </td>
               <td>{{ data.name }}</td>
               {% if data.url %}
                 <td><a href={{data.url}}>{{ data.url }}</a></td>
@@ -31,10 +38,16 @@
               {% elif data.description %}
                 <td>{{ data.description }}</td>
               {% endif %}
+                <td class="col-1 icon"> 
+                <a href="{{ url_for('delete_category', id=data.id)}}"> 
+                  <img src="/static/img/delete.svg" alt="Image" width="25">
+                </a> 
+              </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
+    </div>
     {% endif %}
   </div>
   <div class="button-container">

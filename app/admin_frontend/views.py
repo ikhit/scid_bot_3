@@ -30,7 +30,9 @@ from .utils import (
     delete_item,
     get_image_url,
     db_session,
+    update_media_form,
     update_text_form,
+    update_url_form,
 )
 
 
@@ -207,7 +209,9 @@ async def add_project(session: AsyncSession):
 @app.route("/add-about-company", methods=["GET", "POST"])
 @db_session
 async def add_info(session: AsyncSession):
-    return await add_url_form(session, info_crud, "get_company_about_details")
+    return await add_url_form(
+        session, company_info_crud, "get_company_about_details"
+    )
 
 
 @app.route("/add-product", methods=["GET", "POST"])
@@ -316,4 +320,47 @@ async def get_all_closed_cases(session: AsyncSession):
     closed_cases = await get_closed_cases(session)
     return await render_template(
         "cases.html", data_list=closed_cases, title="Закрытые заявки"
+    )
+
+
+@app.route("/update-category/<int:id>", methods=["GET", "POST"])
+@db_session
+async def update_category(session: AsyncSession, id: int):
+    category = await category_product_crud.get(id, session)
+    if category.url:
+        return await update_url_form(
+            session,
+            category_product_crud,
+            id,
+            "get_product_details",
+            category.product_id,
+        )
+    if not category.media:
+        return await update_text_form(
+            session,
+            category_product_crud,
+            id,
+            "get_product_details",
+            category.product_id,
+        )
+    else:
+        return await update_media_form(
+            session,
+            category_product_crud,
+            id,
+            "get_product_details",
+            category.product_id,
+        )
+
+
+@app.route("/delete-category/<int:id>", methods=["GET", "POST"])
+@db_session
+async def delete_category(session: AsyncSession, id: int):
+    category = await category_product_crud.get(id, session)
+    return await delete_item(
+        session,
+        category_product_crud,
+        id,
+        "get_product_details",
+        category.product_id,
     )

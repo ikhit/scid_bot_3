@@ -2,17 +2,20 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: white;
 }
+
 header {
     padding: 10px;
 }
-.table-header{
+
+.table-header {
     margin-bottom: 2%;
     font-weight: 500;
     font-size: 40px;
 }
 
 .table-header img {
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
+    fill: blue;
 }
 
 table {
@@ -24,21 +27,29 @@ table {
 }
 
 table a {
-        text-decoration: none; 
+    text-decoration: none;
 }
 
-th, td {
+th,
+td {
     padding: 10px 25px 10px;
     text-align: left;
     border: 1px solid #ddd;
     position: relative;
 }
+
+.icon {
+    text-align: center;
+}
+
 th {
     background-color: #f2f2f2;
 }
+
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+
 .page {
     display: flex;
     flex-direction: column;
@@ -46,43 +57,50 @@ tr:nth-child(even) {
     margin-left: 15vw;
     margin-bottom: 0;
 }
+
 .button-container {
     margin-top: 20px;
-  }
-  
+}
+
 .button-container .btn {
-    margin-right: 5px; 
+    margin-right: 5px;
 }
 
 .sidebar {
-    width: 15vw; 
-    height: 100vh; 
-    position: fixed; 
+    width: 15vw;
+    height: 100vh;
+    position: fixed;
     top: 0;
     left: 0;
-    padding-top: 20px; 
-    background-color: #f8f9fa; 
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding-top: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
+
 .btn-toggle-nav a {
     display: block;
     padding: 5px 10px;
     margin: 5px 0;
 }
+
 .btn-toggle-nav a:hover {
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
 }
+
 input[type="checkbox"] {
     display: none;
 }
+
 .collapse {
     display: none;
     margin-left: 20px;
 }
-input[type="checkbox"]:checked + label + .collapse {
+
+input[type="checkbox"]:checked+label+.collapse {
     display: block;
 }
+
 .btn-toggle.active {
-    background-color: #007bff; 
+    background-color: #007bff;
     color: white;
 }
