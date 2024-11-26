@@ -1,8 +1,10 @@
-<header class="d-flex justify-content-ba align-items-center p-3 bg-light">
-    <div class="logo">
-        <a href="/">
-            <img src="/static/img/logo.png" alt="Logo" height="60">
-        </a>
-        <span class="fw-bold">Админка Бота</span>
+<header>
+  <div class="py-2 border-bottom">
+    <div class="d-flex justify-content-end align-items-center px-5">
+      <a href="{{ url_for('logout')}}" class="nav-link text">
+        <img src="/static/img/logout.svg" alt="Logout" height="25" class="me-1">
+        Выйти из системы
+      </a>
     </div>
+  </div>
 </header>

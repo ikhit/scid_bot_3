@@ -7,7 +7,8 @@ from .config import Config
 
 app = Quart(__name__, static_folder="static", static_url_path="/static")
 app.config.from_object(Config)
-session = Session(app)
+app.config['SESSION_TYPE'] = 'redis'
+Session(app)
 
 
 def nl2br(value):

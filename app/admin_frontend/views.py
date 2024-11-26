@@ -40,10 +40,23 @@ from .utils import (
 )
 
 
+@app.before_request
+async def check_authorization():
+    if "user_id" not in session and request.endpoint not in [
+        "admin_login",
+        "admin_password",
+    ]:
+        return redirect(url_for("admin_login"))
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for("admin_login"))
+
+
 @app.route("/", methods=["GET"])
 async def index():
-    if "user_id" not in session:
-        return redirect(url_for("admin_login"))
     return await render_template("base.html")
 
 
@@ -199,7 +212,9 @@ async def get_managers(session):
 @db_session
 async def get_feedbacks(session: AsyncSession):
     feedbacks = await feedback_crud.get_multi(session)
-    return await render_template("feedbacks.html", data_list=feedbacks)
+    return await render_template(
+        "feedbacks.html", data_list=feedbacks, title="Список отзывов от пользователей"
+    )
 
 
 @app.route("/specials", methods=["GET", "POST"])
@@ -421,7 +436,6 @@ async def admin_login(db_session: AsyncSession):
         form_data = await request.form
         if "telegram_id" not in form_data:
             return "Telegram ID не был передан", 400
-        print(form_data)
         telegram_id = int(form_data["telegram_id"])
         user = await user_crud.get_user_by_tg_id(telegram_id, db_session)
         if user.role == RoleEnum.USER:
@@ -434,7 +448,6 @@ async def admin_login(db_session: AsyncSession):
         await redis_client.close()
         await send_password_to_user(telegram_id, password)
         session["telegram_id"] = telegram_id
-        print(f"Session after setting telegram_id: {session}")
         return redirect(url_for("admin_password"))
 
     return await render_template("login.html")
@@ -444,15 +457,14 @@ async def admin_login(db_session: AsyncSession):
 async def admin_password():
     if request.method == "POST":
         telegram_id = session.get("telegram_id")
-        print(session)
         if not telegram_id:
-            return redirect(
-                url_for("admin_login")
-            )
+            return redirect(url_for("admin_login"))
         form_data = await request.form
         entered_password = form_data["password"]
         redis_client = await get_redis_connection()
-        stored_password = await redis_client.get(f"admin_password_{telegram_id}")
+        stored_password = await redis_client.get(
+            f"admin_password_{telegram_id}"
+        )
         await redis_client.close()
         if stored_password is None:
             return (
