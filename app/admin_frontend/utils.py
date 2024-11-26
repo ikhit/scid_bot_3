@@ -1,5 +1,7 @@
 from functools import wraps
 from io import BytesIO
+import random
+import string
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from quart import g, redirect, url_for, render_template
@@ -8,6 +10,7 @@ import requests
 from admin_frontend.forms import MediaForm, QuestionForm, TextForm, URLForm
 from core.db import AsyncSessionLocal
 from core.settings import settings
+from core.bot_setup import bot
 from crud import category_product_crud, info_crud
 
 
@@ -76,6 +79,19 @@ async def delete_item(
     if item:
         await model_crud.remove(item, session)
     return redirect(url_for(redirect_endpoint, id=redirect_id))
+
+
+def generate_password():
+    length = 4
+    password = "".join(random.choice(string.digits) for _ in range(length))
+    return password
+
+
+async def send_password_to_user(telegram_chat_id, password):
+    await bot.send_message(
+        telegram_chat_id,
+        f"Ваш пароль для входа в админку: {password}",
+    )
 
 
 async def add_text_form(session: AsyncSession, model_crud, details_url: str):

@@ -1,5 +1,6 @@
+from datetime import timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import render_template, redirect, url_for
+from quart import render_template, redirect, url_for, request, session
 
 from admin_frontend.forms import SetTimer
 from redis_db.connect import get_redis_connection
@@ -19,7 +20,7 @@ from crud import (
     user_crud,
     feedback_crud,
 )
-from models.models import QuestionEnum
+from models.models import QuestionEnum, RoleEnum
 from .utils import (
     add_product_media_form,
     add_product_text_form,
@@ -28,8 +29,10 @@ from .utils import (
     add_text_form,
     add_url_form,
     delete_item,
+    generate_password,
     get_image_url,
     db_session,
+    send_password_to_user,
     update_media_form,
     update_questions_form,
     update_text_form,
@@ -39,6 +42,8 @@ from .utils import (
 
 @app.route("/", methods=["GET"])
 async def index():
+    if "user_id" not in session:
+        return redirect(url_for("admin_login"))
     return await render_template("base.html")
 
 
@@ -407,3 +412,56 @@ async def update_problems(session: AsyncSession, id: int):
     return await update_questions_form(
         session, id, "add_problems_with_product"
     )
+
+
+@app.route("/admin", methods=["GET", "POST"])
+@db_session
+async def admin_login(db_session: AsyncSession):
+    if request.method == "POST":
+        form_data = await request.form
+        if "telegram_id" not in form_data:
+            return "Telegram ID не был передан", 400
+        print(form_data)
+        telegram_id = int(form_data["telegram_id"])
+        user = await user_crud.get_user_by_tg_id(telegram_id, db_session)
+        if user.role == RoleEnum.USER:
+            return "У вас нет прав администратора", 403
+        password = generate_password()
+        redis_client = await get_redis_connection()
+        await redis_client.setex(
+            f"admin_password_{telegram_id}", timedelta(hours=24), password
+        )
+        await redis_client.close()
+        await send_password_to_user(telegram_id, password)
+        session["telegram_id"] = telegram_id
+        print(f"Session after setting telegram_id: {session}")
+        return redirect(url_for("admin_password"))
+
+    return await render_template("login.html")
+
+
+@app.route("/admin-password", methods=["GET", "POST"])
+async def admin_password():
+    if request.method == "POST":
+        telegram_id = session.get("telegram_id")
+        print(session)
+        if not telegram_id:
+            return redirect(
+                url_for("admin_login")
+            )
+        form_data = await request.form
+        entered_password = form_data["password"]
+        redis_client = await get_redis_connection()
+        stored_password = await redis_client.get(f"admin_password_{telegram_id}")
+        await redis_client.close()
+        if stored_password is None:
+            return (
+                "Пароль устарел или не найден, попробуйте снова через бота.",
+                403,
+            )
+        if entered_password == stored_password:
+            session["user_id"] = telegram_id
+            return redirect(url_for("index"))
+        return "Неверный пароль", 403
+
+    return await render_template("password.html")

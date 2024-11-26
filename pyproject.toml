@@ -24,6 +24,7 @@ redis = "^5.1.1"
 quart = "^0.19.8"
 requests = "^2.32.3"
 quart-wtforms = "^1.0.3"
+quart-session = "^3.0.0"
 
 [tool.poetry.group.dev.dependencies]
 aiosqlite = "^0.20.0"
