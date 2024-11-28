@@ -104,3 +104,20 @@ input[type="checkbox"]:checked+label+.collapse {
     background-color: #007bff;
     color: white;
 }
+
+.alert-container .alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  

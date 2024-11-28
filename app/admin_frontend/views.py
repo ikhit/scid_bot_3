@@ -38,6 +38,8 @@ from .utils import (
     update_questions_form,
     update_text_form,
     update_url_form,
+    edit_user_form,
+    user_form,
 )
 
 
@@ -485,9 +487,8 @@ async def admin_password():
 @app.route("/users/<int:id>")
 @db_session
 async def get_user(session: AsyncSession, id: int):
-    user = user_crud.get(id, session)
-    closed_cases, last_case = await get_manager_stats(id)
-    admin = user.role in
+    user = await user_crud.get(id, session)
+    closed_cases, last_case = await get_manager_stats(id, session)
     return await render_template(
         "user_details.html",
         user=user,
@@ -498,4 +499,11 @@ async def get_user(session: AsyncSession, id: int):
 
 @app.route("/add-user", methods=["GET", "POST"])
 @db_session
-async def add_user(session: AsyncSession): ...
+async def add_user(session: AsyncSession):
+    return await user_form(session)
+
+
+@app.route("/user-edit/<int:id>", methods=["GET", "POST"])
+@db_session
+async def update_user(session: AsyncSession, id: int):
+    return await edit_user_form(session, id)

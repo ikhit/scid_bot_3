@@ -110,3 +110,4 @@ class UserForm(QuartForm):
         choices=[role.value for role in RoleEnum],
         validators=[DataRequired("Обязательное поле")],
     )
+    submit = SubmitField("Добавить")

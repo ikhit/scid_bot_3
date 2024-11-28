@@ -4,7 +4,7 @@ import random
 import string
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import g, redirect, url_for, render_template
+from quart import g, redirect, url_for, render_template, flash
 import requests
 
 from admin_frontend.forms import (
@@ -334,26 +334,36 @@ async def update_questions_form(
     )
 
 
-async def user_form(session: AsyncSession, id: int | None = None):
+async def edit_user_form(session: AsyncSession, id: int):
     form = await UserForm().create_form()
-    if id:
-        user = await user_crud.get(id)
-        if not form.is_submitted:
-            form.telegram_id = user.tg_id
-            form.name = user.name
-            form.role = user.role
+    user = await user_crud.get(id, session)
+    if not form.is_submitted:
+        form.telegram_id.data = user.tg_id
+        form.name.data = user.name
+        form.role.data = user.role
     if await form.validate_on_submit():
-        data = {
-            "name": form.name,
-            "tg_id": form.telegram_id,
-            "role": form.role,
-        }
         try:
-            user = (
-                await user_crud.update(user, data, session)
-                if id
-                else await user_crud.create(data, session)
-            )
+            await user_crud.update(user, form.role.data, session, form.name.data)
             return redirect(url_for("get_user", id=user.id))
         except Exception as e:
             print(e)
+    return await render_template("add_user.html", form=form)
+
+
+async def user_form(session: AsyncSession):
+    form = await UserForm().create_form()
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name.data,
+            "tg_id": form.telegram_id.data,
+            "role": form.role.data,
+        }
+        if await user_crud.get_user_by_tg_id(form.telegram_id.data, session):
+            await flash("Пользователь с таким Telegram ID уже существует", category="error")
+            return redirect(url_for("add_user"))
+        try:
+            user = await user_crud.create(data, session)
+            return redirect(url_for("get_user", id=user.id))
+        except Exception as e:
+            print(e)
+    return await render_template("add_user.html", form=form)

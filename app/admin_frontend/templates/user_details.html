@@ -3,42 +3,14 @@
 {% block title %} {{ user.tg_id }} {% endblock title %}
 
 {% block content %}
-  <div>
+  <div class="container">
     <h3>{{ user.tg_id }} {{ user.name}} </h3> <br>
-    <h4>
-      Роль - {{ user.role }}
-    </h4>
-    {% if user.role %}
-      <table>
-        <thead>
-          <tr>
-            <th>Название</th>
-            <th>Содержание</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for data in item_data %}
-            <tr>
-              <td>{{ data.name }}</td>
-              {% if data.url %}
-                <td><a href={{ data.url }}>{{ data.url }}</a></td>
-              {% elif data.media %}
-                <td>
-                  <img src="{{ data.media }}" alt="Image" width="100">
-                  {% if data.description %} {{ data.description | nl2br | safe }} {% endif %}
-                </td>
-              {% elif data.description %}
-                <td>{{ data.description | nl2br | safe }}</td>
-              {% endif %}
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% endif %}
+    <h4> Роль - {{ user.role }} </h4> <br>
+    <h4> Количество закрытых заявок {{ closed_cases }} </h4> <br>
+    <h4> Последняя закрытая завяка {% if last_case %} {{ last_case.id}} от {{ last_case.shipping_date_close}} {% else %} - {% endif %}
   </div>
 
   <div class="button-container">
-    <a href="{{url_for(update_url, id=item.id)}}" class="btn btn-primary">Редактировать</a>
-    <a href="{{url_for(delete_url, id=item.id)}}" class="btn btn-danger">Удалить</a>
+    <a href="{{url_for('update_user', id=user.id)}}" class="btn btn-primary">Изменить роль</a>
   </div>
 {% endblock content %}
