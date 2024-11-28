@@ -7,11 +7,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from quart import g, redirect, url_for, render_template
 import requests
 
-from admin_frontend.forms import MediaForm, QuestionForm, TextForm, URLForm
+from admin_frontend.forms import (
+    MediaForm,
+    QuestionForm,
+    TextForm,
+    URLForm,
+    UserForm,
+)
 from core.db import AsyncSessionLocal
 from core.settings import settings
 from core.bot_setup import bot
-from crud import category_product_crud, info_crud
+from crud import category_product_crud, info_crud, user_crud
 
 
 def get_image_url(file_id: str) -> str:
@@ -326,3 +332,28 @@ async def update_questions_form(
         "add_question.html",
         form=form,
     )
+
+
+async def user_form(session: AsyncSession, id: int | None = None):
+    form = await UserForm().create_form()
+    if id:
+        user = await user_crud.get(id)
+        if not form.is_submitted:
+            form.telegram_id = user.tg_id
+            form.name = user.name
+            form.role = user.role
+    if await form.validate_on_submit():
+        data = {
+            "name": form.name,
+            "tg_id": form.telegram_id,
+            "role": form.role,
+        }
+        try:
+            user = (
+                await user_crud.update(user, data, session)
+                if id
+                else await user_crud.create(data, session)
+            )
+            return redirect(url_for("get_user", id=user.id))
+        except Exception as e:
+            print(e)

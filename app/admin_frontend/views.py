@@ -8,6 +8,7 @@ from crud.request_to_manager import (
     get_all_manager_requests,
     get_all_support_requests,
     get_closed_cases,
+    get_manager_stats,
 )
 
 from . import app
@@ -213,7 +214,9 @@ async def get_managers(session):
 async def get_feedbacks(session: AsyncSession):
     feedbacks = await feedback_crud.get_multi(session)
     return await render_template(
-        "feedbacks.html", data_list=feedbacks, title="Список отзывов от пользователей"
+        "feedbacks.html",
+        data_list=feedbacks,
+        title="Список отзывов от пользователей",
     )
 
 
@@ -477,3 +480,22 @@ async def admin_password():
         return "Неверный пароль", 403
 
     return await render_template("password.html")
+
+
+@app.route("/users/<int:id>")
+@db_session
+async def get_user(session: AsyncSession, id: int):
+    user = user_crud.get(id, session)
+    closed_cases, last_case = await get_manager_stats(id)
+    admin = user.role in
+    return await render_template(
+        "user_details.html",
+        user=user,
+        closed_cases=closed_cases,
+        last_case=last_case,
+    )
+
+
+@app.route("/add-user", methods=["GET", "POST"])
+@db_session
+async def add_user(session: AsyncSession): ...

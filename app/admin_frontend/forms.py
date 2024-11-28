@@ -1,5 +1,3 @@
-from enum import Enum
-
 from quart_wtf import QuartForm, FileRequired
 from wtforms import (
     StringField,
@@ -9,14 +7,11 @@ from wtforms import (
     TextAreaField,
     FileField,
     IntegerField,
+    SelectField,
 )
 from wtforms.validators import DataRequired, Optional
 
-
-class ContentEnum(str, Enum):
-    TEXT = "Текст"
-    URL = "Ссылка"
-    MEDIA = "Картинка"
+from models.models import RoleEnum
 
 
 def validate_button_len(form, field):
@@ -95,3 +90,23 @@ class SetTimer(QuartForm):
         ],
     )
     submit = SubmitField("Установить")
+
+
+class UserForm(QuartForm):
+    telegram_id = IntegerField(
+        "Введите Telegram ID пользователя",
+        validators=[
+            DataRequired(
+                message="Обязательное поле",
+            )
+        ],
+    )
+    name = StringField(
+        "Введите имя пользователя",
+        default="Аноним",
+        validators=[Optional()],
+    )
+    role = SelectField(
+        choices=[role.value for role in RoleEnum],
+        validators=[DataRequired("Обязательное поле")],
+    )

@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %} Добавить Текст {% endblock %}
+{% block title %} Добавить пользователя {% endblock %}
 
 {% block content %}
 <div class="row">
-    <h1>Добавить текст</h1>
+    <h1>Добавить пользователя</h1>
     <div class="col-12 col-lg-7 my-5">
       <form method="POST">
         {{ form.hidden_tag() }}
+        {{ form.telegram_id(class="form-control form-control-lg py-3 mb-3", placeholder=form.telegram_id.label.text) }} 
         {{ form.name(class="form-control form-control-lg py-3 mb-3", placeholder=form.name.label.text) }}
-        {{ form.description(class="form-control form-control-lg py-3 mb-3", placeholder=form.description.label.text) }} 
+        {{ form.role(class="form-control form-control-lg py-3 mb-3")}}
         {{ form.submit(class="btn btn-success") }} 
       </form>
     </div>
