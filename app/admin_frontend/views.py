@@ -1,14 +1,17 @@
 from datetime import timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import render_template, redirect, url_for, request, session
+from quart import render_template, redirect, url_for, request
+from quart import session as q_session
 
 from admin_frontend.forms import SetTimer
 from redis_db.connect import get_redis_connection
 from crud.request_to_manager import (
+    close_case,
     get_all_manager_requests,
     get_all_support_requests,
     get_closed_cases,
     get_manager_stats,
+    get_request,
 )
 
 from . import app
@@ -45,7 +48,7 @@ from .utils import (
 
 @app.before_request
 async def check_authorization():
-    if "user_id" not in session and request.endpoint not in [
+    if "user_id" not in q_session and request.endpoint not in [
         "admin_login",
         "admin_password",
     ]:
@@ -54,7 +57,7 @@ async def check_authorization():
 
 @app.route("/logout")
 def logout():
-    session.pop("user_id", None)
+    q_session.pop("user_id", None)
     return redirect(url_for("admin_login"))
 
 
@@ -452,7 +455,7 @@ async def admin_login(db_session: AsyncSession):
         )
         await redis_client.close()
         await send_password_to_user(telegram_id, password)
-        session["telegram_id"] = telegram_id
+        q_session["telegram_id"] = telegram_id
         return redirect(url_for("admin_password"))
 
     return await render_template("login.html")
@@ -461,7 +464,7 @@ async def admin_login(db_session: AsyncSession):
 @app.route("/admin-password", methods=["GET", "POST"])
 async def admin_password():
     if request.method == "POST":
-        telegram_id = session.get("telegram_id")
+        telegram_id = q_session.get("telegram_id")
         if not telegram_id:
             return redirect(url_for("admin_login"))
         form_data = await request.form
@@ -477,7 +480,7 @@ async def admin_password():
                 403,
             )
         if entered_password == stored_password:
-            session["user_id"] = telegram_id
+            q_session["user_id"] = telegram_id
             return redirect(url_for("index"))
         return "Неверный пароль", 403
 
@@ -488,7 +491,7 @@ async def admin_password():
 @db_session
 async def get_user(session: AsyncSession, id: int):
     user = await user_crud.get(id, session)
-    closed_cases, last_case = await get_manager_stats(id, session)
+    closed_cases, last_case = await get_manager_stats(user.tg_id, session)
     return await render_template(
         "user_details.html",
         user=user,
@@ -507,3 +510,16 @@ async def add_user(session: AsyncSession):
 @db_session
 async def update_user(session: AsyncSession, id: int):
     return await edit_user_form(session, id)
+
+
+@app.route("/close-case/<int:id>")
+@db_session
+async def close_current_case(session: AsyncSession, id: int): 
+    await close_case(q_session["user_id"], id, session)
+    case = await get_request(id, session)
+    url = (
+        "get_manager_callbacks"
+        if case.need_contact_with_manager
+        else "get_support_requests"
+    )
+    return redirect(url_for(url))

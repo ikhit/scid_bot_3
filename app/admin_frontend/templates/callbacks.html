@@ -14,6 +14,7 @@
               <th>Имя пользователя</th>
               <th>Телефон для связи</th>
               <th>Дата заявки</th>
+              <th class="col-1"> Закрыть </th>
           </tr>
       </thead>
       <tbody>
@@ -27,6 +28,11 @@
                 <td> {{ data.first_name }} </td>
                 <td> {{ data.phone_number }} </td>
                 <td> {{ data.shipping_date }} </td>
+                <td class="col-1 icon"> 
+                  <a href="{{ url_for('close_current_case', id=data.id)}}"> 
+                    <img src="/static/img/close_case.svg" alt="Image" width="25">
+                </a> 
+                </td>
               </tr>
           {% endfor %}
       </tbody>
