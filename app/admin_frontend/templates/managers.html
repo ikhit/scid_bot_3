@@ -15,7 +15,7 @@
           {% for data in data_list %}
               <tr>
                 <td> 
-                  <a href="{{ url_for('get_user', id=data.id)}}">
+                  <a href="{{ url_for('users.get_user', id=data.id)}}">
                     {{ data.tg_id}}
                   </a> 
                 </td>
@@ -26,6 +26,6 @@
       </tbody>
   </table>
   <div class="button-container">
-    <a href="{{url_for('add_user')}}" class="btn btn-success">Добавить</a>
+    <a href="{{url_for('users.add_user')}}" class="btn btn-success">Добавить</a>
   </div>
 {% endblock content %}

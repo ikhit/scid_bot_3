@@ -9,11 +9,11 @@
         <label for="data-bot-toggle" class="btn btn-toggle">Данные бота</label>
         <div class="collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="{{ url_for('get_company_about') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">О компании</a></li>
-                <li><a href="{{ url_for('get_products') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Продукты</a></li>
-                <li><a href="{{ url_for('get_projects') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Другие проекты</a></li>
-                <li><a href="{{ url_for('get_questions') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Общие вопросы</a></li>
-                <li><a href="{{ url_for('get_product_problems') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
+                <li><a href="{{ url_for('about_company.get_company_about') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">О компании</a></li>
+                <li><a href="{{ url_for('products.get_products') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Продукты</a></li>
+                <li><a href="{{ url_for('projects.get_projects') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Другие проекты</a></li>
+                <li><a href="{{ url_for('questions.get_questions') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Общие вопросы</a></li>
+                <li><a href="{{ url_for('questions.get_product_problems') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
             </ul>
         </div>
       </li>
@@ -22,20 +22,20 @@
         <label for="requests-toggle" class="btn btn-toggle">Заявки</label>
         <div class="collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="{{ url_for('get_manager_callbacks')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Обратный звонок от менеджера</a></li>
-                <li><a href="{{ url_for('get_support_requests')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
-                <li><a href="{{ url_for('get_all_closed_cases')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Закрытые заявки</a></li>
+                <li><a href="{{ url_for('managers.get_manager_callbacks')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Обратный звонок от менеджера</a></li>
+                <li><a href="{{ url_for('managers.get_support_requests')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
+                <li><a href="{{ url_for('managers.get_all_closed_cases')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Закрытые заявки</a></li>
             </ul>
         </div>
       </li>
       <li class="mb-1">
-        <a href="{{ url_for('get_managers') }}" class="btn btn-toggle">Управление персоналом</a>
+        <a href="{{ url_for('managers.get_managers') }}" class="btn btn-toggle">Управление персоналом</a>
       </li>
       <li class="mb-1">
-        <a href="{{ url_for('get_feedbacks') }}" class="btn btn-toggle">Отзывы</a>
+        <a href="{{ url_for('managers.get_feedbacks') }}" class="btn btn-toggle">Отзывы</a>
       </li>
       <li class="mb-1">
-        <a href="{{ url_for('get_specials') }}" class="btn btn-toggle">Специальные возможности</a>
+        <a href="{{ url_for('managers.get_specials') }}" class="btn btn-toggle">Специальные возможности</a>
       </li>
 </div>
 <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>

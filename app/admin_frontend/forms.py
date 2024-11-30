@@ -3,7 +3,6 @@ from wtforms import (
     StringField,
     SubmitField,
     URLField,
-    ValidationError,
     TextAreaField,
     FileField,
     IntegerField,
@@ -11,15 +10,8 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Optional
 
+from .validators import validate_button_len
 from models.models import RoleEnum
-
-
-def validate_button_len(form, field):
-    """Валидация длины названия для кнопок."""
-    if len(field.data.encode("utf-8")) >= 64:
-        raise ValidationError(
-            "Слишком длинное название (не поместится в кнопку)."
-        )
 
 
 class BaseForm(QuartForm):

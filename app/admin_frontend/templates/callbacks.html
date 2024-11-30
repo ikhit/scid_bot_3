@@ -29,7 +29,7 @@
                 <td> {{ data.phone_number }} </td>
                 <td> {{ data.shipping_date }} </td>
                 <td class="col-1 icon"> 
-                  <a href="{{ url_for('close_current_case', id=data.id)}}"> 
+                  <a href="{{ url_for('managers.close_current_case', id=data.id)}}"> 
                     <img src="/static/img/close_case.svg" alt="Image" width="25">
                 </a> 
                 </td>

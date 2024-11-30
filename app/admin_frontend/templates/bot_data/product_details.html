@@ -23,7 +23,7 @@
           {% for data in item_data %}
             <tr>
               <td class="col-1 icon"> 
-                <a href="{{ url_for('update_category', id=data.id)}}"> 
+                <a href="{{ url_for('products.update_category', id=data.id)}}"> 
                   <img src="/static/img/edit.svg" alt="Image" width="25">
                 </a> 
               </td>
@@ -39,7 +39,7 @@
                 <td>{{ data.description }}</td>
               {% endif %}
                 <td class="col-1 icon"> 
-                <a href="{{ url_for('delete_category', id=data.id)}}"> 
+                <a href="{{ url_for('products.delete_category', id=data.id)}}"> 
                   <img src="/static/img/delete.svg" alt="Image" width="25">
                 </a> 
               </td>
@@ -51,10 +51,10 @@
     {% endif %}
   </div>
   <div class="button-container">
-    <a href="{{url_for('update_product', id=item.id)}}" class="btn btn-primary">Редактировать</a>
-    <a href="{{url_for('add_product_url', id=item.id)}}" class="btn btn-success">Добавить ссылку</a>
-    <a href="{{url_for('add_product_text', id=item.id)}}" class="btn btn-success">Добавить текст</a>
-    <a href="{{url_for('add_product_media', id=item.id)}}" class="btn btn-success">Добавить картинку</a>
-    <a href="{{url_for('delete_product', id=item.id)}}" class="btn btn-danger">Удалить</a>
+    <a href="{{url_for('products.update_product', id=item.id)}}" class="btn btn-primary">Редактировать</a>
+    <a href="{{url_for('products.add_product_url', id=item.id)}}" class="btn btn-success">Добавить ссылку</a>
+    <a href="{{url_for('products.add_product_text', id=item.id)}}" class="btn btn-success">Добавить текст</a>
+    <a href="{{url_for('products.add_product_media', id=item.id)}}" class="btn btn-success">Добавить картинку</a>
+    <a href="{{url_for('products.delete_product', id=item.id)}}" class="btn btn-danger">Удалить</a>
   </div>
 {% endblock content %}

@@ -10,7 +10,6 @@ async def create_request_to_manager(
     user_data: dict, request_type: str, session: AsyncSession
 ) -> ContactManager:
     """Создание заявки на связь с менеджером."""
-
     data_to_db = ContactManager(
         **user_data,
         need_support=(request_type == "callback_request"),
@@ -28,7 +27,6 @@ async def get_request(
     request_id: int, session: AsyncSession
 ) -> ContactManager:
     """Получить запрос по id."""
-
     request = await session.execute(
         select(ContactManager).where(ContactManager.id == int(request_id))
     )
@@ -39,7 +37,6 @@ async def get_all_support_requests(
     session: AsyncSession,
 ) -> list[ContactManager]:
     """Получить список активных заявок на поддержку."""
-
     support_requests = await session.execute(
         select(ContactManager).where(
             and_(
@@ -55,7 +52,6 @@ async def get_all_manager_requests(
     session: AsyncSession,
 ) -> list[ContactManager]:
     """Получить список активных заявок на звонок менеджера."""
-
     support_requests = await session.execute(
         select(ContactManager).where(
             and_(
@@ -71,17 +67,9 @@ async def close_case(
     manager_id: int, request_id: int, session: AsyncSession
 ) -> tuple:
     """Закрыть заявку."""
-
     case_to_close = await get_request(int(request_id), session)
-
-    if case_to_close.need_contact_with_manager:
-        setattr(case_to_close, "need_contact_with_manager", False)
-    elif case_to_close.need_support:
-        setattr(case_to_close, "need_support", False)
-
     setattr(case_to_close, "shipping_date_close", datetime.now())
     setattr(case_to_close, "manager_id", int(manager_id))
-
     session.add(case_to_close)
     await session.commit()
     await session.refresh(case_to_close)
@@ -92,7 +80,6 @@ async def get_manager_stats(
     manager_id: int, session: AsyncSession
 ) -> tuple[ContactManager]:
     """Получить статистику по работае менеджера."""
-
     closed_requests_count = await session.execute(
         select(func.count())
         .select_from(ContactManager)

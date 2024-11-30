@@ -1,6 +1,7 @@
 from functools import wraps
 from io import BytesIO
 import random
+import re
 import string
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -343,7 +344,9 @@ async def edit_user_form(session: AsyncSession, id: int):
         form.role.data = user.role
     if await form.validate_on_submit():
         try:
-            await user_crud.update(user, form.role.data, session, form.name.data)
+            await user_crud.update(
+                user, form.role.data, session, form.name.data
+            )
             return redirect(url_for("get_user", id=user.id))
         except Exception as e:
             print(e)
@@ -359,7 +362,10 @@ async def user_form(session: AsyncSession):
             "role": form.role.data,
         }
         if await user_crud.get_user_by_tg_id(form.telegram_id.data, session):
-            await flash("Пользователь с таким Telegram ID уже существует", category="error")
+            await flash(
+                "Пользователь с таким Telegram ID уже существует",
+                category="error",
+            )
             return redirect(url_for("add_user"))
         try:
             user = await user_crud.create(data, session)
@@ -367,3 +373,9 @@ async def user_form(session: AsyncSession):
         except Exception as e:
             print(e)
     return await render_template("add_user.html", form=form)
+
+
+def nl2br(value):
+    value = re.sub(r"\n\n", "</p><p>", value)
+    value = value.replace("\n", "<br>")
+    return f"<p>{value}</p>"
