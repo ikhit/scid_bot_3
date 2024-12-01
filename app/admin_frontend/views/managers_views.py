@@ -1,9 +1,15 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from quart import redirect, render_template, session as q_session, url_for, Blueprint
+from quart import (
+    redirect,
+    render_template,
+    session as q_session,
+    url_for,
+    Blueprint,
+)
 from redis_db.connect import get_redis_connection
 
 from admin_frontend.forms import SetTimer
-from admin_frontend.utils import db_session
+from admin_frontend.utils import db_session, paginate_objects
 from crud import feedback_crud, user_crud
 
 from crud.request_to_manager import (
@@ -16,6 +22,7 @@ from crud.request_to_manager import (
 
 
 managers = Blueprint("managers", __name__)
+
 
 @managers.route("/")
 @db_session
@@ -72,12 +79,18 @@ async def close_current_case(session: AsyncSession, id: int):
 
 @managers.route("/feedbacks")
 @db_session
-async def get_feedbacks(session: AsyncSession):
+async def get_feedbacks(session: AsyncSession, page: int = 1):
     feedbacks = await feedback_crud.get_multi(session)
+    paginated_feedbacks, total_count, total_pages = paginate_objects(
+        feedbacks, page=page, per_page=5
+    )
+
     return await render_template(
         "feedbacks.html",
-        data_list=feedbacks,
+        data_list=paginated_feedbacks,
         title="Список отзывов от пользователей",
+        current_page=page,
+        total_pages=total_pages,
     )
 
 
@@ -95,3 +108,10 @@ async def get_specials():
             print(e)
         return redirect(url_for(".get_specials"))
     return await render_template("specials.html", timer=timer, form=form)
+
+
+@managers.route("/feedbacks/<int:id>")
+@db_session
+async def get_feedback(session: AsyncSession, id: int):
+    feedback = await feedback_crud.get(id, session)
+    return await render_template("feedback_text.html", feedback=feedback)

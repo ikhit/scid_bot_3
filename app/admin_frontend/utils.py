@@ -1,5 +1,6 @@
 from functools import wraps
 from io import BytesIO
+from math import ceil
 import random
 import re
 import string
@@ -375,7 +376,19 @@ async def user_form(session: AsyncSession):
     return await render_template("add_user.html", form=form)
 
 
-def nl2br(value):
+def nl2br(value: str) -> str:
     value = re.sub(r"\n\n", "</p><p>", value)
     value = value.replace("\n", "<br>")
     return f"<p>{value}</p>"
+
+
+def paginate_objects(
+    objects: list, page: int = 1, per_page: int = 5
+) -> tuple[list[object], int, int]:
+    total_count = len(objects)
+    total_pages = ceil(total_count / per_page)
+    page = max(1, min(page, total_pages)) 
+    offset = (page - 1) * per_page
+    paginated_objects = objects[offset : offset + per_page]
+
+    return paginated_objects, total_count, total_pages
