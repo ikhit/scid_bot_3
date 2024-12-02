@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from quart import (
     redirect,
     render_template,
+    request,
     session as q_session,
     url_for,
     Blueprint,
@@ -79,9 +80,10 @@ async def close_current_case(session: AsyncSession, id: int):
 
 @managers.route("/feedbacks")
 @db_session
-async def get_feedbacks(session: AsyncSession, page: int = 1):
+async def get_feedbacks(session: AsyncSession):
+    page = request.args.get("page", 1, type=int)
     feedbacks = await feedback_crud.get_multi(session)
-    paginated_feedbacks, total_count, total_pages = paginate_objects(
+    paginated_feedbacks, total_pages = paginate_objects(
         feedbacks, page=page, per_page=5
     )
 
@@ -91,6 +93,7 @@ async def get_feedbacks(session: AsyncSession, page: int = 1):
         title="Список отзывов от пользователей",
         current_page=page,
         total_pages=total_pages,
+        endpoint=".get_feedbacks",
     )
 
 

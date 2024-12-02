@@ -387,8 +387,7 @@ def paginate_objects(
 ) -> tuple[list[object], int, int]:
     total_count = len(objects)
     total_pages = ceil(total_count / per_page)
-    page = max(1, min(page, total_pages)) 
+    page = max(1, min(page, total_pages))
     offset = (page - 1) * per_page
     paginated_objects = objects[offset : offset + per_page]
-
-    return paginated_objects, total_count, total_pages
+    return paginated_objects, total_pages

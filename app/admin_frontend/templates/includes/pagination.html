@@ -1,0 +1,13 @@
+{% macro render_pagination(current_page, total_pages, endpoint) %}
+  <div class="pagination">
+    {% if current_page > 1 %}
+        <a href="{{ url_for(endpoint, page=current_page - 1) }}">« Предыдущая</a>
+    {% endif %}
+    
+    <span>Страница {{ current_page }} из {{ total_pages }}</span>
+
+    {% if current_page < total_pages %}
+        <a href="{{ url_for(endpoint, page=current_page + 1) }}">Следующая »</a>
+    {% endif %}
+  </div>
+{% endmacro %}

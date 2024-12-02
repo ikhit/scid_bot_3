@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'includes/pagination.html' as pagination %}
 
 {% block title %} {{ title }} {% endblock title %}
 
@@ -30,17 +31,6 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <div class="pagination">
-      {% if current_page > 1 %}
-          <a href="{{ url_for('managers.get_feedbacks', page=current_page - 1) }}">« Предыдущая</a>
-      {% endif %}
-      
-      <span>Страница {{ current_page }} из {{ total_pages }}</span>
-
-      {% if current_page < total_pages %}
-          <a href="{{ url_for('managers.get_feedbacks', page=current_page + 1) }}">Следующая »</a>
-      {% endif %}
-    </div>
+    {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
   </div>
 {% endblock content %}
