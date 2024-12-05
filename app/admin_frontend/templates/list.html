@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'includes/pagination.html' as pagination %}
 
 {% block title %} {{ title }} {% endblock title %}
 
@@ -27,6 +28,10 @@
           {% endfor %}
       </tbody>
   </table>
+  <br>
+  {% if total_pages > 1 %}
+    {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
+  {% endif %}
   <div class="button-container">
     <a href="{{url_for(add_url)}}" class="btn btn-success">Добавить</a>
   </div>

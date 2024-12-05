@@ -25,8 +25,7 @@ async def add_text_form(session: AsyncSession, model_crud, details_url: str):
         except Exception as e:
             print(e)
     return await render_template(
-        "add_description.html",
-        form=form,
+        "bot_data/add_item_form.html", form=form, title="Добавить текст"
     )
 
 
@@ -55,8 +54,7 @@ async def update_text_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "add_description.html",
-        form=form,
+        "bot_data/add_item_form.html", form=form, title="Отредактировать текст"
     )
 
 
@@ -76,7 +74,9 @@ async def add_url_form(
             return redirect(url_for(details_url, id=item.id))
         except Exception as e:
             print(e)
-    return await render_template("add_url.html", form=form)
+    return await render_template(
+        "bot_data/add_item_form.html", form=form, title="Добавить ссылку"
+    )
 
 
 async def update_url_form(
@@ -104,8 +104,7 @@ async def update_url_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "add_url.html",
-        form=form,
+        "bot_data/add_item_form.html", form=form, title="Отредактировать ссылку"
     )
 
 
@@ -125,8 +124,7 @@ async def add_question_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "add_question.html",
-        form=form,
+        "bot_data/add_item_form.html", form=form, title="Добавить вопросы"
     )
 
 
@@ -151,8 +149,7 @@ async def update_questions_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "add_question.html",
-        form=form,
+        "bot_data/add_item_form.html", form=form, title="Отредактировать вопросы"
     )
 
 
@@ -171,7 +168,9 @@ async def add_product_url_form(
             return redirect(url_for(details_url, id=product_id))
         except Exception as e:
             print(e)
-    return await render_template("add_url.html", form=form)
+    return await render_template(
+        "bot_data/add_item_form.html", form=form, title="Добавить ссылку к дополению"
+    )
 
 
 async def add_product_text_form(
@@ -189,7 +188,7 @@ async def add_product_text_form(
             return redirect(url_for(details_url, id=product_id))
         except Exception as e:
             print(e)
-    return await render_template("add_description.html", form=form)
+    return await render_template("bot_data/add_item_form.html", form=form, title="Добавить текст к дополнению")
 
 
 async def add_product_media_form(
@@ -210,7 +209,7 @@ async def add_product_media_form(
             return redirect(url_for(details_url, id=product_id))
         except Exception as e:
             print(e)
-    return await render_template("add_media.html", form=form)
+    return await render_template("bot_data/add_item_form.html", form=form, title="Добавить картинку к дополнению")
 
 
 async def update_media_form(
@@ -240,9 +239,10 @@ async def update_media_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "add_media.html",
+        "bot_data/add_item_form.html",
         form=form,
         image=image,
+        title="Отредактировать картинку к дополнению"
     )
 
 
@@ -282,4 +282,4 @@ async def handle_user_form(session: AsyncSession, id: int | None = None):
                 return redirect(url_for(".get_user", id=user.id))
             except Exception as e:
                 print(e)
-    return await render_template("add_user.html", form=form)
+    return await render_template("bot_data/add_item_form.html", form=form, title="Данные пользователя")

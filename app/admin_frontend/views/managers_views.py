@@ -98,14 +98,14 @@ async def get_specials():
         except Exception as e:
             print(e)
         return redirect(url_for(".get_specials"))
-    return await render_template("specials.html", timer=timer, form=form)
+    return await render_template("bot_data/specials.html", timer=timer, form=form)
 
 
 @managers.route("/feedbacks/<int:id>")
 @db_session
 async def get_feedback(session: AsyncSession, id: int):
     feedback = await feedback_crud.get(id, session)
-    return await render_template("feedback_text.html", feedback=feedback)
+    return await render_template("feedback_card.html", feedback=feedback)
 
 
 @managers.route("/case/<int:id>")

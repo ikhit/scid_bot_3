@@ -6,6 +6,7 @@ from admin_frontend.utils import (
     delete_item,
 )
 from admin_frontend.form_handlers import add_url_form, update_url_form
+from admin_frontend.pagination import get_paginated_data_and_render
 from crud import company_info_crud
 
 about_company = Blueprint("about_company", __name__)
@@ -15,12 +16,13 @@ about_company = Blueprint("about_company", __name__)
 @db_session
 async def get_company_about(session: AsyncSession):
     infos = await company_info_crud.get_multi(session)
-    return await render_template(
+    return await get_paginated_data_and_render(
+        infos,
         "list.html",
-        data_list=infos,
-        details_url=".get_company_about_details",
-        title="Информация о компании",
+        "Информация о компании",
+        ".get_company_about",
         add_url=".add_info",
+        details_url=".get_company_about_details",
     )
 
 

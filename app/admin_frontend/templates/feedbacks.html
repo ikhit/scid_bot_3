@@ -31,7 +31,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <br>
-    {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
   </div>
+  <br>
+    {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
 {% endblock content %}

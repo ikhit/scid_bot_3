@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <h1>
+      {{ title }}
+    </h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert-container">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="col-12 col-lg-7 my-5">
+      <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }} 
+
+        {% if form.name %}
+          {{ form.name(class="form-control form-control-lg py-3 mb-3", placeholder=form.name.label.text) }}
+        {% endif %}
+
+        {% if form.description %}
+          {{ form.description(class="form-control form-control-lg py-3 mb-3", placeholder=form.description.label.text) }}
+        {% endif %}
+
+        {% if form.telegram_id %}
+          {{ form.telegram_id(class="form-control form-control-lg py-3 mb-3") }}
+        {% endif %}
+
+        {% if form.role %}
+          {{ form.role(class="form-control form-control-lg py-3 mb-3") }}
+        {% endif %}
+
+        {% if form.media %}
+          {% if image %}
+            <h4>Текущая картинка</h4>
+            <img src="{{ image }}" alt="Image" width="200">
+          {% endif %}
+          {{ form.media(class="form-control form-control-lg py-3 mb-3") }}
+        {% endif %}
+
+        {% if form.question %}
+          {{ form.question(class="form-control form-control-lg py-3 mb-3", placeholder=form.question.label.text) }}
+        {% endif %}
+
+        {% if form.answer %}
+          {{ form.answer(class="form-control form-control-lg py-3 mb-3", placeholder=form.answer.label.text) }}
+        {% endif %}
+
+        {% if form.url %}
+          {{ form.url(class="form-control form-control-lg py-3 mb-3", placeholder=form.url.label.text) }}
+        {% endif %}
+
+        {{ form.submit(class="btn btn-success") }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
