@@ -2,11 +2,10 @@ from quart import render_template, Blueprint
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from admin_frontend.utils import (
-    add_url_form,
     db_session,
     delete_item,
-    update_url_form,
 )
+from admin_frontend.form_handlers import add_url_form, update_url_form
 from crud import portfolio_crud
 
 projects = Blueprint("projects", __name__)

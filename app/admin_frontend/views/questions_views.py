@@ -2,9 +2,11 @@ from quart import render_template, Blueprint
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from admin_frontend.utils import (
-    add_questions,
     db_session,
     delete_item,
+)
+from admin_frontend.form_handlers import (
+    add_question_form,
     update_questions_form,
 )
 from crud import info_crud
@@ -70,7 +72,7 @@ async def get_product_problems_details(session: AsyncSession, id: int):
 @questions.route("/add", methods=["GET", "POST"])
 @db_session
 async def add_question(session: AsyncSession):
-    return await add_questions(
+    return await add_question_form(
         session,
         QuestionEnum.GENERAL_QUESTIONS,
         ".get_question_details",
@@ -80,7 +82,7 @@ async def add_question(session: AsyncSession):
 @questions.route("/problems/add", methods=["GET", "POST"])
 @db_session
 async def add_problems_with_product(session: AsyncSession):
-    return await add_questions(
+    return await add_question_form(
         session,
         QuestionEnum.PROBLEMS_WITH_PRODUCTS,
         ".get_question_details",

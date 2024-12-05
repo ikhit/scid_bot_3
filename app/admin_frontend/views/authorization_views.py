@@ -41,7 +41,7 @@ async def admin_login(db_session: AsyncSession):
         q_session["telegram_id"] = telegram_id
         return redirect(url_for(".admin_password"))
 
-    return await render_template("login.html")
+    return await render_template("auth/login.html")
 
 
 @auth.route("/password", methods=["GET", "POST"])
@@ -67,7 +67,7 @@ async def admin_password():
             return redirect(url_for("index"))
         return "Неверный пароль", 403
 
-    return await render_template("password.html")
+    return await render_template("auth/password.html")
 
 
 @auth.route("/logout")
