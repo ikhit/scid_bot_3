@@ -1,0 +1,28 @@
+{% macro render_table(columns, data_list, link_field=None) %}
+  <table>
+    <thead>
+      <tr>
+        {% for column in columns %}
+          <th>{{ column }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in data_list %}
+        <tr>
+          {% for column in columns %}
+            <td>
+              {% if link_field %}
+                <a href="{{ url_for(link_field, id=data.id) }}">
+                  {{ data[column] }}
+                </a>
+              {% else %}
+                {{ data[column] }}
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}

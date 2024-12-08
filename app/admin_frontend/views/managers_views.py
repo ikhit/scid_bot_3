@@ -31,7 +31,7 @@ async def get_managers(session):
     users = await user_crud.get_multi(session)
     return await get_paginated_data_and_render(
         users,
-        "managers.html",
+        "table_content.html",
         "Список администраторов",
         ".get_managers",
     )
