@@ -6,6 +6,7 @@ from admin_frontend.utils import (
     delete_item,
 )
 from admin_frontend.form_handlers import add_url_form, update_url_form
+from admin_frontend.pagination import get_paginated_data_and_render
 from crud import portfolio_crud
 
 projects = Blueprint("projects", __name__)
@@ -27,11 +28,12 @@ async def get_project_details(session: AsyncSession, id: int):
 @db_session
 async def get_projects(session: AsyncSession):
     projects = await portfolio_crud.get_multi(session)
-    return await render_template(
-        "list.html",
-        data_list=projects,
-        details_url=".get_project_details",
+    return await get_paginated_data_and_render(
+        data=projects,
+        template_name="list.html",
         title="Список дополнительных проектов",
+        endpoint=".get_projects",
+        details_url=".get_project_details",
         add_url=".add_project",
     )
 

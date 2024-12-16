@@ -1,26 +1,46 @@
-{% macro render_table(columns, data_list, link_field=None) %}
+{% macro render_table(columns, data_list, link_field=None, action_text=None, action_endpoint=None, action_img=None) %}
   <table>
     <thead>
       <tr>
+        <!--Заголовок таблицы-->
         {% for column in columns %}
-          <th>{{ column }}</th>
+          {% if column in data_list[0] and data_list[0][column] is not none %}
+            <th>{{ column }}</th>
+          {% endif %}
         {% endfor %}
+        {% if action_endpoint %}
+          <th> {{ action_text }} </th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
+      <!--Содержание таблицы-->
       {% for data in data_list %}
         <tr>
           {% for column in columns %}
-            <td>
-              {% if link_field %}
-                <a href="{{ url_for(link_field, id=data.id) }}">
-                  {{ data[column] }}
-                </a>
-              {% else %}
-                {{ data[column] }}
-              {% endif %}
-            </td>
+            {% if data[column] is not none %}
+              <td>
+                {% if link_field %}
+                  <a href="{{ url_for(link_field, id=data['ID']) }}">
+                    {{ data[column]|string|truncate(100) }} 
+                  </a>
+                {% else %}
+                  {{ data[column]|string|truncate(100) }}
+                {% endif %}
+              </td>
+            {% endif %}
           {% endfor %}
+          {% if action_endpoint %}
+            <td class="col-2 icon"> 
+              <a href="{{ url_for(action_endpoint, id=data['ID']) }}">
+                {% if action_img %}
+                  <img src="{{ action_img }}" alt="Image" width="25">
+                {% else %}
+                  <button>{{ action_text }}</button> 
+                {% endif %}
+              </a>
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

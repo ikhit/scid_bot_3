@@ -17,10 +17,10 @@ about_company = Blueprint("about_company", __name__)
 async def get_company_about(session: AsyncSession):
     infos = await company_info_crud.get_multi(session)
     return await get_paginated_data_and_render(
-        infos,
-        "list.html",
-        "Информация о компании",
-        ".get_company_about",
+        data=infos,
+        template_name="list.html",
+        title="Информация о компании",
+        endpoint=".get_company_about",
         add_url=".add_info",
         details_url=".get_company_about_details",
     )

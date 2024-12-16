@@ -30,10 +30,11 @@ managers = Blueprint("managers", __name__)
 async def get_managers(session):
     users = await user_crud.get_multi(session)
     return await get_paginated_data_and_render(
-        users,
-        "table_content.html",
-        "Список администраторов",
-        ".get_managers",
+        data=users,
+        template_name="list.html",
+        title="Список пользователей",
+        endpoint=".get_managers",
+        details_url="users.get_user",
     )
 
 
@@ -42,10 +43,13 @@ async def get_managers(session):
 async def get_manager_callbacks(session: AsyncSession):
     callbacks = await get_all_manager_requests(session)
     return await get_paginated_data_and_render(
-        callbacks,
-        "callbacks.html",
-        "Заявки на обратный звонок",
-        ".get_manager_callbacks",
+        data=callbacks,
+        template_name="list.html",
+        title="Заявки на обратный звонок",
+        endpoint=".get_manager_callbacks",
+        action_text="Закрыть заявку",
+        action_endpoint=".close_current_case",
+        action_img="/static/img/close_case.svg",
     )
 
 
@@ -54,10 +58,13 @@ async def get_manager_callbacks(session: AsyncSession):
 async def get_support_requests(session: AsyncSession):
     callbacks = await get_all_support_requests(session)
     return await get_paginated_data_and_render(
-        callbacks,
-        "callbacks.html",
-        "Заявки на техподдержку",
-        ".get_support_requests",
+        data=callbacks,
+        template_name="list.html",
+        title="Заявки на техподдержку",
+        endpoint=".get_support_requests",
+        action_text="Закрыть заявку",
+        action_endpoint=".close_current_case",
+        action_img="/static/img/close_case.svg",
     )
 
 
@@ -66,10 +73,10 @@ async def get_support_requests(session: AsyncSession):
 async def get_all_closed_cases(session: AsyncSession):
     closed_cases = await get_closed_cases(session)
     return await get_paginated_data_and_render(
-        closed_cases,
-        "cases.html",
-        "Закрытые заявки",
-        ".get_all_closed_cases",
+        data=closed_cases,
+        template_name="list.html",
+        title="Закрытые заявки",
+        endpoint=".get_all_closed_cases",
     )
 
 
@@ -78,10 +85,11 @@ async def get_all_closed_cases(session: AsyncSession):
 async def get_feedbacks(session: AsyncSession):
     feedbacks = await feedback_crud.get_multi(session)
     return await get_paginated_data_and_render(
-        feedbacks,
-        "feedbacks.html",
-        "Отзывы",
-        ".get_feedbacks",
+        data=feedbacks,
+        template_name="list.html",
+        title="Отзывы",
+        endpoint=".get_feedbacks",
+        details_url=".get_feedback",
     )
 
 
@@ -98,7 +106,9 @@ async def get_specials():
         except Exception as e:
             print(e)
         return redirect(url_for(".get_specials"))
-    return await render_template("bot_data/specials.html", timer=timer, form=form)
+    return await render_template(
+        "bot_data/specials.html", timer=timer, form=form
+    )
 
 
 @managers.route("/feedbacks/<int:id>")

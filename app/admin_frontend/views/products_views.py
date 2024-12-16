@@ -15,6 +15,7 @@ from admin_frontend.form_handlers import (
     update_text_form,
     update_url_form,
 )
+from admin_frontend.pagination import get_paginated_data_and_render
 from crud import category_product_crud, products_crud
 
 
@@ -26,12 +27,13 @@ products = Blueprint("products", __name__)
 async def get_products(session: AsyncSession):
     """Вывести список всех продуктов."""
     products = await products_crud.get_multi(session)
-    return await render_template(
-        "list.html",
-        data_list=products,
-        details_url=".get_product_details",
+    return await get_paginated_data_and_render(
+        data=products,
+        template_name="list.html",
         title="Список продуктов и услуг",
+        endpoint=".get_products",
         add_url=".add_product",
+        details_url=".get_product_details",
     )
 
 

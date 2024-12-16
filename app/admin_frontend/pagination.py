@@ -19,9 +19,9 @@ async def get_paginated_data_and_render(
     template_name: str,
     title: str,
     endpoint: str,
-    add_url: str | None = None,
-    details_url: str | None = None,
+    **kwargs,
 ):
+    data = [obj.verbosed_dict() for obj in data]
     page = request.args.get("page", 1, type=int)
     paginated_data, total_pages = paginate_objects(data, page=page, per_page=5)
 
@@ -32,6 +32,5 @@ async def get_paginated_data_and_render(
         current_page=page,
         total_pages=total_pages,
         endpoint=endpoint,
-        add_url=add_url,
-        details_url=details_url,
+        **kwargs,
     )

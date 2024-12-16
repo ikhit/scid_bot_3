@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import 'includes/pagination.html' as pagination %}
+{% import 'includes/table.html' as table %}
 
 {% block title %} {{ title }} {% endblock title %}
 
@@ -8,31 +9,26 @@
     <img src="/static/img/table.svg" alt="Table" height="40"> 
     {{ title }} 
   </div>
-  <table>
-      <thead>
-          <tr>
-              <th>Название</th>
-              <th>Описание</th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for data in data_list %}
-              <tr>
-                  <td>
-                    <a href="{{ url_for(details_url, id=data.id)}}">
-                        {% if data.name %} {{ data.name }} {% else %} {{ data.question }} {% endif %}
-                    </a>
-                </td>
-                  <td>{% if data.description %} {{ data.description|truncate(100) }} {% elif data.url %} <a href={{ data.url }}>{{ data.url }}</a> {% else %} {{ data.answer|truncate(100) }} {% endif %}</td>
-              </tr>
-          {% endfor %}
-      </tbody>
-  </table>
+  
+  {% set columns = data_list[0].keys() if data_list|length > 0 else [] %}
+
+  {{ table.render_table(
+      columns=columns, 
+      data_list=data_list, 
+      link_field=details_url,
+      action_text=action_text,  
+      action_endpoint=action_endpoint,
+      action_img=action_img
+    ) }}
+  
   <br>
   {% if total_pages > 1 %}
     {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
   {% endif %}
-  <div class="button-container">
-    <a href="{{url_for(add_url)}}" class="btn btn-success">Добавить</a>
-  </div>
+
+  {% if add_url %}
+    <div class="button-container">
+      <a href="{{url_for(add_url)}}" class="btn btn-success">Добавить</a>
+    </div>
+  {% endif %}
 {% endblock content %}

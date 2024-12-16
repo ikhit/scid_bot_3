@@ -49,6 +49,14 @@ class User(Base):
         "ContactManager", back_populates="manager"
     )
 
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Телеграм ID": self.tg_id,
+            "Имя": self.name,
+            "Роль": self.role,
+        }
+
 
 class ProductCategory(Base):
     """БД модель продуктов и услуг."""
@@ -62,6 +70,13 @@ class ProductCategory(Base):
         cascade="all, delete",
         back_populates="product_category",
     )
+
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Название продукта": self.name,
+            "Описание продукта": self.description,
+        }
 
 
 class CategoryType(Base):
@@ -92,6 +107,14 @@ class CategoryType(Base):
         "ProductCategory", back_populates="categories"
     )
 
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Название продукта": self.name,
+            "Описание продукта": self.description,
+        }
+
+
 
 class InformationAboutCompany(Base):
     """Бд модель информации о компании."""
@@ -102,6 +125,12 @@ class InformationAboutCompany(Base):
 
     url: Mapped[str] = mapped_column(pgsql_types.VARCHAR(mc.URL_LENGTH))
 
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Название": self.name,
+            "Ссылка": self.url,
+        }
 
 class CheckCompanyPortfolio(Base):
     """Бд модель информации о проектах."""
@@ -111,6 +140,13 @@ class CheckCompanyPortfolio(Base):
     )
 
     url: Mapped[str] = mapped_column(pgsql_types.VARCHAR(mc.URL_LENGTH))
+
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Название проекта": self.name,
+            "Ссылка": self.url,
+        }
 
 
 class Info(Base):
@@ -126,6 +162,13 @@ class Info(Base):
     question: Mapped[str] = mapped_column(pgsql_types.TEXT, unique=True)
 
     answer: Mapped[str] = mapped_column(pgsql_types.TEXT, nullable=False)
+
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Категория вопросов": self.question,
+            "Вопросы и ответы": self.answer,
+        }
 
 
 class ContactManager(Base):
@@ -165,6 +208,16 @@ class ContactManager(Base):
         "User", back_populates="closed_requests"
     )
 
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Имя пользователя": self.first_name,
+            "Телефон для связи": self.phone_number,
+            "Дата заявки": self.shipping_date,
+            "Менеджер": self.manager_id,
+            "Дата закрытия заявки": self.shipping_date_close,
+        }
+
 
 class Feedback(Base):
     """БД модель для отзывов."""
@@ -180,3 +233,12 @@ class Feedback(Base):
         pgsql_types.TIMESTAMP, default=datetime.now
     )
     rating: Mapped[int] = mapped_column(pgsql_types.INTEGER, nullable=False)
+
+    def verbosed_dict(self):
+        return {
+            "ID": self.id,
+            "Отзыв": self.feedback_text,
+            "Оценка": self.rating,
+            "ID пользователя": self.user,
+            "Дата отзыва": self.feedback_date,
+        }
