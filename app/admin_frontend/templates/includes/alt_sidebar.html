@@ -1,0 +1,65 @@
+<div class="d-flex">
+  <aside id="sidebar" class="sidebar-toggle">
+      <div class="sidebar-logo">
+          <img src="/static/img/logo.png" alt="Logo" height="60">
+          <a href="/">SCID info bot</a>
+      </div>
+      <hr>
+      <ul class="sidebar-nav p-0">
+          <li class="sidebar-item">
+            <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#bot-data" aria-expanded="true" aria-controls="auth">
+            <span>Данные бота</span>
+        </a>
+        <ul id="bot-data" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+            <li class="sidebar-item">
+                <a href="{{ url_for('about_company.get_company_about') }}" class="sidebar-link collapsed-link">О компании</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('products.get_products') }}" class="sidebar-link collapsed-link">Продукты</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('projects.get_projects') }}" class="sidebar-link collapsed-link">Другие проекты</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('questions.get_questions') }}" class="sidebar-link collapsed-link">Общие вопросы</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('questions.get_product_problems') }}" class="sidebar-link collapsed-link">Проблемы с продуктами</a>
+            </li>
+        </ul>
+        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#callback-requests" aria-expanded="true" aria-controls="auth">
+                  <span>Заявки</span>
+              </a>
+              <ul id="callback-requests" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                  <li class="sidebar-item">
+                      <a href="{{ url_for('managers.get_manager_callbacks')}}" class="sidebar-link collapsed-link">Обратный звонок от менеджера</a>
+                  </li>
+                  <li class="sidebar-item">
+                      <a href="{{ url_for('managers.get_support_requests')}}" class="sidebar-link collapsed-link">Проблемы с продуктами</a>
+                  </li>
+                  <li class="sidebar-item">
+                      <a href="{{ url_for('managers.get_all_closed_cases')}}" class="sidebar-link collapsed-link">Закрытые заявки</a>
+                  </li>
+              </ul>
+          </li>
+          <li class="sidebar-item">
+              <a href="{{ url_for('managers.get_managers') }}" class="sidebar-link">
+                  <i class="lni lni-popup"></i>
+                  <span>Управление персоналом</span>
+              </a>
+          </li>
+          <li class="sidebar-item">
+              <a href="{{ url_for('managers.get_feedbacks') }}" class="sidebar-link">
+                  <i class="lni lni-cog"></i>
+                  <span>Отзывы</span>
+              </a>
+          </li>
+          <li class="sidebar-item">
+              <a href="{{ url_for('managers.get_specials') }}" class="sidebar-link">
+                  <i class="lni lni-cog"></i>
+                  <span>Специальные возможности</span>
+              </a>
+          </li>
+      </ul>
+  </aside>
+</div>

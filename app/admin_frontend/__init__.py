@@ -38,12 +38,12 @@ Session(app)
 @app.before_request
 async def check_authorization():
     if "user_id" not in q_session and request.endpoint not in [
-        "admin_login",
-        "admin_password",
+        "auth.admin_login",
+        "auth.admin_password",
     ]:
-        return redirect(url_for("admin_login"))
+        return redirect(url_for("auth.admin_login"))
 
 
 @app.route("/")
 async def index():
-    return await render_template("base.html")
+    return await render_template("alt_base.html")

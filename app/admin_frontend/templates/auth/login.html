@@ -16,7 +16,7 @@
 
 <body class="row">
     <main class="container d-flex align-items-center justify-content-center min-vh-100">
-        <form method="POST" action="{{ url_for('admin_login') }}">
+        <form method="POST" action="{{ url_for('auth.admin_login') }}">
             <h1 class="h3 fw-normal py-3">Вход в админку SCID-бота</h1>
             <div class="form-floating">
                 <input type="text" class="form-control" id="telegram_id" name="telegram_id" placeholder="Ваш телеграм ID" required>

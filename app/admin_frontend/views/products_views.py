@@ -49,7 +49,7 @@ async def get_product_details(session: AsyncSession, id: int):
         if data.media:
             data.media = get_image_url(data.media)
     return await render_template(
-        "bot_data/product_details.html",
+        "detail.html",
         item=product,
         item_data=product_data,
         delete_url=".delete_product",

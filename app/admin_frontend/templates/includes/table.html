@@ -1,5 +1,5 @@
 {% macro render_table(columns, data_list, link_field=None, action_text=None, action_endpoint=None, action_img=None) %}
-  <table>
+  <table class="table table-bordered table-hover">
     <thead>
       <tr>
         <!--Заголовок таблицы-->
@@ -21,7 +21,7 @@
             {% if data[column] is not none %}
               <td>
                 {% if link_field %}
-                  <a href="{{ url_for(link_field, id=data['ID']) }}">
+                  <a href="{{ url_for(link_field, id=data['ID']) }}" class="table-link">
                     {{ data[column]|string|truncate(100) }} 
                   </a>
                 {% else %}

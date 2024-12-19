@@ -1,0 +1,54 @@
+<div class="flex-shrink-0 p-3" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+        <img src="/static/img/logo.png" alt="Logo" height="60">
+        <span class="fs-5 fw-semibold"> SCID info bot</span>
+    </a>
+    <ul>
+      <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#bot-data" aria-expanded="false">
+          Данные бота
+          <i class="px-1 bi bi-chevron-down ms-auto"></i> <!-- Стрелочка -->
+        </button>
+        <div class="collapse" id="bot-data">
+          <ul class="btn-toggle-nav fw-normal pb-2">
+            <li><a href="{{ url_for('about_company.get_company_about') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded"> О компании</a></li>
+            <li><a href="{{ url_for('products.get_products') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Продукты</a></li>
+            <li><a href="{{ url_for('projects.get_projects') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Другие проекты</a></li>
+            <li><a href="{{ url_for('questions.get_questions') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Общие вопросы</a></li>
+            <li><a href="{{ url_for('questions.get_product_problems') }}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          Заявки
+          <i class="bi bi-chevron-down ms-auto"></i> <!-- Стрелочка -->
+        </button>
+        <div class="collapse" id="dashboard-collapse">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li><a href="{{ url_for('managers.get_manager_callbacks')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Обратный звонок от менеджера</a></li>
+            <li><a href="{{ url_for('managers.get_support_requests')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Проблемы с продуктами</a></li>
+            <li><a href="{{ url_for('managers.get_all_closed_cases')}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Закрытые заявки</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="{{ url_for('managers.get_managers') }}" class="nav-link active" aria-current="page">
+          Управление персоналом
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('managers.get_feedbacks') }}" class="nav-link link-body-emphasis">
+          Отзывы
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('managers.get_specials') }}" class="nav-link link-body-emphasis">
+          Специальные возможности
+        </a>
+      </li>
+    </ul>
+  </div>
+  
