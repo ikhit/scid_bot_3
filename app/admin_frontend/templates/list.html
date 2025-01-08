@@ -5,30 +5,31 @@
 {% block title %} {{ title }} {% endblock title %}
 
 {% block content %}
-  <div class="table-header">
-    <img src="/static/img/table.svg" alt="Table" height="40"> 
-    {{ title }} 
-  </div>
-  
-  {% set columns = data_list[0].keys() if data_list|length > 0 else [] %}
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="container">
+      <div class="table-header">
+        <img src="/static/img/table.svg" alt="Table" height="40"> 
+        {{ title }} 
+      </div>
+      {% set columns = data_list[0].keys() if data_list|length > 0 else [] %}
+      {{ table.render_table(
+          columns=columns, 
+          data_list=data_list, 
+          link_field=details_url,
+          action_text=action_text,  
+          action_endpoint=action_endpoint,
+          action_img=action_img
+        ) }}
+      {% if total_pages > 1 %}
+        <br>
+        {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
+      {% endif %}
 
-  {{ table.render_table(
-      columns=columns, 
-      data_list=data_list, 
-      link_field=details_url,
-      action_text=action_text,  
-      action_endpoint=action_endpoint,
-      action_img=action_img
-    ) }}
-  
-  <br>
-  {% if total_pages > 1 %}
-    {{ pagination.render_pagination(current_page=current_page, total_pages=total_pages, endpoint=endpoint) }}
-  {% endif %}
-
-  {% if add_url %}
-    <div class="button-container">
-      <a href="{{url_for(add_url)}}" class="btn btn-success">Добавить</a>
+      {% if add_url %}
+        <div class="button-container">
+          <a href="{{url_for(add_url)}}" class="btn btn-success">Добавить</a>
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
+  </div>
 {% endblock content %}

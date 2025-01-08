@@ -3,10 +3,16 @@
 {% block title %} Отзыв {{ feedback.id }} {% endblock title %}
 
 {% block content %}
-  <div class="container">
-    <h3> Отзыв номер {{ feedback.id }} от пользователя с id - {{ feedback.user }} </h3> <br>
-    <h4> Оценка - {{ feedback.rating }} </h4> <br>
-    <h4> {{ feedback.feedback_text }} </h4> <br>
-    <h4> Дата отзыва - {{ feedback.feedback_date }} </h4> <br>
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="card col-4">  
+      <h3 class="card-header">{{ feedback.id }} от пользователя с id - {{ feedback.user }} </h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"> Оценка - {{ feedback.rating }} </li>
+        <li class="list-group-item"> {{ feedback.feedback_text }} </li>
+        <li class="list-group-item"> Дата отзыва - {{ feedback.feedback_date }} </li> 
+      </ul>
+    </div>
   </div>
 {% endblock content %}
+
+  

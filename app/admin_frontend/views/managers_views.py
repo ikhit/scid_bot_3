@@ -115,7 +115,7 @@ async def get_specials():
 @db_session
 async def get_feedback(session: AsyncSession, id: int):
     feedback = await feedback_crud.get(id, session)
-    return await render_template("feedback_card.html", feedback=feedback)
+    return await render_template("alt_details.html", feedback=feedback)
 
 
 @managers.route("/case/<int:id>")

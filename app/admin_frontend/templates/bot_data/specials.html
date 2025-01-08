@@ -2,17 +2,19 @@
 
 {% block content %}
 
-<h1> Установить таймер для отсчёта инактивности пользователя </h1> <br>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="container">
+    <h1> Установить таймер для отсчёта инактивности пользователя </h1> <br>
 
-<h3> Текущий таймер - {{ timer }} секунд </h3> </br>
+    <h3> Текущий таймер - {{ timer }} секунд </h3> </br>
 
-<div class="col-12 col-lg-7 my-5">
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.timer(class="form-control form-control-lg py-3 mb-3", placeholder=form.timer.label.text) }}<br />
-    {{ form.submit(class="btn btn-success") }}
-  </form>
+    <div class="col-12 col-lg-7 my-5">
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.timer(class="form-control form-control-lg py-3 mb-3", placeholder=form.timer.label.text) }}<br />
+        {{ form.submit(class="btn btn-success") }}
+      </form>
+    </div>
+  </div>
 </div>
-</div>
-
 {% endblock %}

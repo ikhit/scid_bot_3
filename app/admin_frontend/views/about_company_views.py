@@ -31,7 +31,7 @@ async def get_company_about(session: AsyncSession):
 async def get_company_about_details(session: AsyncSession, id: int):
     info = await company_info_crud.get(id, session)
     return await render_template(
-        "detail.html",
+        "alt_details.html",
         item=info,
         delete_url=".delete_about_company",
         update_url=".update_about_company",

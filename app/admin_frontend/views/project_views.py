@@ -17,7 +17,7 @@ projects = Blueprint("projects", __name__)
 async def get_project_details(session: AsyncSession, id: int):
     project = await portfolio_crud.get(id, session)
     return await render_template(
-        "detail.html",
+        "alt_details.html",
         item=project,
         delete_url=".delete_project",
         update_url=".update_project",

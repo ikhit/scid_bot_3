@@ -15,7 +15,7 @@ async def get_user(session: AsyncSession, id: int):
     user = await user_crud.get(id, session)
     closed_cases, last_case = await get_manager_stats(user.tg_id, session)
     return await render_template(
-        "user_details.html",
+        "alt_details.html",
         user=user,
         closed_cases=closed_cases,
         last_case=last_case,

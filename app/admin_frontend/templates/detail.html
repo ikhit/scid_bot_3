@@ -3,67 +3,72 @@
 {% block title %} {{ item.name }} {% endblock title %}
 
 {% block content %}
-  <div>
-    <h3>{% if item.name %}{{ item.name }} {% else %} {{ item.question }} {% endif %}</h3> <br>
-    <h4>
-      {% if item.description %}{{ item.description | nl2br | safe }} 
-      {% elif item.answer %} {{ item.answer | nl2br | safe  }} 
-      {% else %} {{ item.url }} 
-      {% endif %}
-    </h4>
-    {% if item_data %}
-    <div class="row">
-      <table>
-        <thead>
-          <tr>
-            <th>Редактировать</th>
-            <th>Название</th>
-            <th>Содержание</th>
-            <th>Удалить</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for data in item_data %}
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="card col-5">
+      <h5 class="card-header">{% if item.name %}{{ item.name }} {% else %} {{ item.question }} {% endif %}</h5>
+      <div class="card-body">
+        <p class="card-text">
+          {% if item.description %}{{ item.description | nl2br | safe }} 
+          {% elif item.answer %} {{ item.answer | nl2br | safe  }} 
+          {% else %} {{ item.url }} 
+          {% endif %}
+        </p>
+      {% if item_data %}
+      <div class="row">
+        <table class="table table-bordered">
+          <thead>
             <tr>
-              <td class="col-1 icon"> 
-                <a href="{{ url_for('products.update_category', id=data.id)}}"> 
-                  <img src="/static/img/edit.svg" alt="Image" width="25">
-                </a> 
-              </td>
-              <td>{{ data.name }}</td>
-              {% if data.url %}
-                <td><a href={{data.url}}>{{ data.url }}</a></td>
-              {% elif data.media %}
-                <td>
-                  <img src="{{ data.media }}" alt="Image" width="100">
-                  {% if data.description %} {{ data.description }} {% endif %}
-                </td>
-              {% elif data.description %}
-                <td>{{ data.description }}</td>
-              {% endif %}
-                <td class="col-1 icon"> 
-                <a href="{{ url_for('products.delete_category', id=data.id)}}"> 
-                  <img src="/static/img/delete.svg" alt="Image" width="25">
-                </a> 
-              </td>
+              <th>Редактировать</th>
+              <th>Название</th>
+              <th>Содержание</th>
+              <th>Удалить</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <div class="button-container">
-      <a href="{{url_for('products.update_product', id=item.id)}}" class="btn btn-primary">Редактировать</a>
-      <a href="{{url_for('products.add_product_url', id=item.id)}}" class="btn btn-success">Добавить ссылку</a>
-      <a href="{{url_for('products.add_product_text', id=item.id)}}" class="btn btn-success">Добавить текст</a>
-      <a href="{{url_for('products.add_product_media', id=item.id)}}" class="btn btn-success">Добавить картинку</a>
-      <a href="{{url_for('products.delete_product', id=item.id)}}" class="btn btn-danger">Удалить</a>
-    </div>
-    {% else %}
-      <div class="button-container">
-        <a href="{{url_for(update_url, id=item.id)}}" class="btn btn-primary">Редактировать</a>
-        <a href="{{url_for(delete_url, id=item.id)}}" class="btn btn-danger">Удалить</a>
+          </thead>
+          <tbody>
+            {% for data in item_data %}
+              <tr>
+                <td class="col-1 icon"> 
+                  <a href="{{ url_for('products.update_category', id=data.id)}}"> 
+                    <img src="/static/img/edit.svg" alt="Image" width="25">
+                  </a> 
+                </td>
+                <td>{{ data.name }}</td>
+                {% if data.url %}
+                  <td><a href={{data.url}}>{{ data.url }}</a></td>
+                {% elif data.media %}
+                  <td>
+                    <img src="{{ data.media }}" alt="Image" width="100">
+                    {% if data.description %} {{ data.description }} {% endif %}
+                  </td>
+                {% elif data.description %}
+                  <td>{{ data.description }}</td>
+                {% endif %}
+                  <td class="col-1 icon"> 
+                  <a href="{{ url_for('products.delete_category', id=data.id)}}"> 
+                    <img src="/static/img/delete.svg" alt="Image" width="25">
+                  </a> 
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-    {% endif %}
+      <br>
+      <div class="button-container">
+        <a href="{{url_for('products.update_product', id=item.id)}}" class="btn btn-primary">Редактировать</a>
+        <a href="{{url_for('products.add_product_url', id=item.id)}}" class="btn btn-success">Добавить ссылку</a>
+        <a href="{{url_for('products.add_product_text', id=item.id)}}" class="btn btn-success">Добавить текст</a>
+        <a href="{{url_for('products.add_product_media', id=item.id)}}" class="btn btn-success">Добавить картинку</a>
+        <a href="{{url_for('products.delete_product', id=item.id)}}" class="btn btn-danger">Удалить</a>
+      </div>
+      {% else %}
+        <div class="button-container">
+          <a href="{{url_for(update_url, id=item.id)}}" class="btn btn-primary">Редактировать</a>
+          <a href="{{url_for(delete_url, id=item.id)}}" class="btn btn-danger">Удалить</a>
+        </div>
+      {% endif %}
+    </div>
   </div>
-  
 {% endblock content %}
+
+

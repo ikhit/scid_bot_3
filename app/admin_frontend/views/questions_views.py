@@ -37,7 +37,7 @@ async def get_questions(session: AsyncSession):
 async def get_question_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
     return await render_template(
-        "detail.html",
+        "alt_details.html",
         item=question,
         delete_url=".delete_question",
         update_url=".update_question",
