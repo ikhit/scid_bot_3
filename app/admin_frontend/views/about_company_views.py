@@ -18,7 +18,7 @@ async def get_company_about(session: AsyncSession):
     infos = await company_info_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=infos,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Информация о компании",
         endpoint=".get_company_about",
         add_url=".add_info",
@@ -31,7 +31,7 @@ async def get_company_about(session: AsyncSession):
 async def get_company_about_details(session: AsyncSession, id: int):
     info = await company_info_crud.get(id, session)
     return await render_template(
-        "alt_details.html",
+        "bot_data/card.html",
         item=info,
         delete_url=".delete_about_company",
         update_url=".update_about_company",

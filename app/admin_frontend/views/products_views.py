@@ -29,7 +29,7 @@ async def get_products(session: AsyncSession):
     products = await products_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=products,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Список продуктов и услуг",
         endpoint=".get_products",
         add_url=".add_product",
@@ -49,7 +49,7 @@ async def get_product_details(session: AsyncSession, id: int):
         if data.media:
             data.media = get_image_url(data.media)
     return await render_template(
-        "alt_details.html",
+        "bot_data/card.html",
         item=product,
         item_data=product_data,
         delete_url=".delete_product",

@@ -24,7 +24,7 @@ async def get_questions(session: AsyncSession):
     )
     return await get_paginated_data_and_render(
         data=questions,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Общие вопросы",
         endpoint=".get_questions",
         details_url=".get_question_details",
@@ -37,7 +37,7 @@ async def get_questions(session: AsyncSession):
 async def get_question_details(session: AsyncSession, id: int):
     question = await info_crud.get(id, session)
     return await render_template(
-        "alt_details.html",
+        "bot_data/card.html",
         item=question,
         delete_url=".delete_question",
         update_url=".update_question",
@@ -52,7 +52,7 @@ async def get_product_problems(session: AsyncSession):
     )
     return await get_paginated_data_and_render(
         data=questions,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Проблемы с продуктами",
         endpoint=".get_questions",
         details_url=".get_question_details",

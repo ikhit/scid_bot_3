@@ -46,4 +46,4 @@ async def check_authorization():
 
 @app.route("/")
 async def index():
-    return await render_template("alt_base.html")
+    return await render_template("base.html")

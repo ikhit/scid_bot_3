@@ -31,7 +31,7 @@ async def get_managers(session):
     users = await user_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=users,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Список пользователей",
         endpoint=".get_managers",
         details_url="users.get_user",
@@ -44,7 +44,7 @@ async def get_manager_callbacks(session: AsyncSession):
     callbacks = await get_all_manager_requests(session)
     return await get_paginated_data_and_render(
         data=callbacks,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Заявки на обратный звонок",
         endpoint=".get_manager_callbacks",
         action_text="Закрыть заявку",
@@ -59,7 +59,7 @@ async def get_support_requests(session: AsyncSession):
     callbacks = await get_all_support_requests(session)
     return await get_paginated_data_and_render(
         data=callbacks,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Заявки на техподдержку",
         endpoint=".get_support_requests",
         action_text="Закрыть заявку",
@@ -74,7 +74,7 @@ async def get_all_closed_cases(session: AsyncSession):
     closed_cases = await get_closed_cases(session)
     return await get_paginated_data_and_render(
         data=closed_cases,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Закрытые заявки",
         endpoint=".get_all_closed_cases",
     )
@@ -86,7 +86,7 @@ async def get_feedbacks(session: AsyncSession):
     feedbacks = await feedback_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=feedbacks,
-        template_name="list.html",
+        template_name="bot_data/list.html",
         title="Отзывы",
         endpoint=".get_feedbacks",
         details_url=".get_feedback",
@@ -115,7 +115,7 @@ async def get_specials():
 @db_session
 async def get_feedback(session: AsyncSession, id: int):
     feedback = await feedback_crud.get(id, session)
-    return await render_template("alt_details.html", feedback=feedback)
+    return await render_template("bot_data/card.html", feedback=feedback)
 
 
 @managers.route("/case/<int:id>")
