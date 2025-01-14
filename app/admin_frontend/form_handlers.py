@@ -13,6 +13,14 @@ from crud import category_product_crud, info_crud, user_crud
 
 
 async def add_text_form(session: AsyncSession, model_crud, details_url: str):
+    """
+    Обрабатывает форму для добавления нового текста.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param model_crud: Класс или объект с методами CRUD для работы с моделью.
+    :param details_url: URL для перенаправления после успешного добавления.
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для добавления текста.
+    """
     form = await TextForm().create_form()
     if await form.validate_on_submit():
         data = {
@@ -36,6 +44,16 @@ async def update_text_form(
     details_url: str,
     details_id: int | None = None,
 ):
+    """
+    Обрабатывает форму для обновления текста.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param model_crud: Класс или объект с методами CRUD для работы с моделью.
+    :param id: Идентификатор элемента, который нужно обновить.
+    :param details_url: URL для перенаправления после успешного обновления.
+    :param details_id: Идентификатор, используемый при формировании URL для перенаправления (по умолчанию None).
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для редактирования текста.
+    """
     form = await TextForm().create_form()
     item = await model_crud.get(id, session)
     if not form.is_submitted:
@@ -63,6 +81,14 @@ async def add_url_form(
     model_crud,
     details_url: str,
 ):
+    """
+    Обрабатывает форму для добавления новой ссылки.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param model_crud: Класс или объект с методами CRUD для работы с моделью.
+    :param details_url: URL для перенаправления после успешного добавления.
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для добавления ссылки.
+    """
     form = await URLForm().create_form()
     if await form.validate_on_submit():
         info_data = {
@@ -86,6 +112,16 @@ async def update_url_form(
     details_url: str,
     details_id: int | None = None,
 ):
+    """
+    Обрабатывает форму для обновления ссылки.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param model_crud: Класс или объект с методами CRUD для работы с моделью.
+    :param id: Идентификатор элемента, который нужно обновить.
+    :param details_url: URL для перенаправления после успешного обновления.
+    :param details_id: Идентификатор, используемый при формировании URL для перенаправления (по умолчанию None).
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для редактирования ссылки.
+    """
     form = await URLForm().create_form()
     item = await model_crud.get(id, session)
     if not form.is_submitted:
@@ -104,13 +140,23 @@ async def update_url_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "bot_data/add_item_form.html", form=form, title="Отредактировать ссылку"
+        "bot_data/add_item_form.html",
+        form=form,
+        title="Отредактировать ссылку",
     )
 
 
 async def add_question_form(
     session: AsyncSession, question_category: str, details_url: str
 ):
+    """
+    Обрабатывает форму для добавления нового вопроса.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param question_category: Категория вопроса.
+    :param details_url: URL для перенаправления после успешного добавления.
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для добавления вопроса.
+    """
     form = await QuestionForm().create_form()
     if await form.validate_on_submit():
         data = {
@@ -133,6 +179,14 @@ async def update_questions_form(
     id: str,
     details_url: str,
 ):
+    """
+    Обрабатывает форму для обновления вопроса.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param id: Идентификатор вопроса, который нужно обновить.
+    :param details_url: URL для перенаправления после успешного обновления.
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для редактирования вопроса.
+    """
     form = await QuestionForm().create_form()
     item = await info_crud.get(id, session)
     if not form.is_submitted:
@@ -149,13 +203,23 @@ async def update_questions_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "bot_data/add_item_form.html", form=form, title="Отредактировать вопросы"
+        "bot_data/add_item_form.html",
+        form=form,
+        title="Отредактировать вопросы",
     )
 
 
 async def add_product_url_form(
     session: AsyncSession, details_url: str, product_id: int
 ):
+    """
+    Обрабатывает форму для добавления ссылки к продукту.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param details_url: URL для перенаправления после успешного добавления.
+    :param product_id: Идентификатор продукта, к которому добавляется ссылка.
+    :return: Перенаправление на страницу с деталями продукта или отображение формы для добавления ссылки.
+    """
     form = await URLForm().create_form()
     if await form.validate_on_submit():
         info_data = {
@@ -169,13 +233,23 @@ async def add_product_url_form(
         except Exception as e:
             print(e)
     return await render_template(
-        "bot_data/add_item_form.html", form=form, title="Добавить ссылку к дополению"
+        "bot_data/add_item_form.html",
+        form=form,
+        title="Добавить ссылку к дополению",
     )
 
 
 async def add_product_text_form(
     session: AsyncSession, details_url: str, product_id: int
 ):
+    """
+    Обрабатывает форму для добавления текста к продукту.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param details_url: URL для перенаправления после успешного добавления.
+    :param product_id: Идентификатор продукта, к которому добавляется текст.
+    :return: Перенаправление на страницу с деталями продукта или отображение формы для добавления текста.
+    """
     form = await TextForm().create_form()
     if await form.validate_on_submit():
         info_data = {
@@ -188,12 +262,24 @@ async def add_product_text_form(
             return redirect(url_for(details_url, id=product_id))
         except Exception as e:
             print(e)
-    return await render_template("bot_data/add_item_form.html", form=form, title="Добавить текст к дополнению")
+    return await render_template(
+        "bot_data/add_item_form.html",
+        form=form,
+        title="Добавить текст к дополнению",
+    )
 
 
 async def add_product_media_form(
     session: AsyncSession, details_url: str, product_id: int
 ):
+    """
+    Обрабатывает форму для добавления медиа-файла (например, изображения) к продукту.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param details_url: URL для перенаправления после успешного добавления.
+    :param product_id: Идентификатор продукта, к которому добавляется медиа-файл.
+    :return: Перенаправление на страницу с деталями продукта или отображение формы для добавления медиа.
+    """
     form = await MediaForm().create_form()
     if await form.validate_on_submit():
         image_data = form.media.data.read()
@@ -209,7 +295,11 @@ async def add_product_media_form(
             return redirect(url_for(details_url, id=product_id))
         except Exception as e:
             print(e)
-    return await render_template("bot_data/add_item_form.html", form=form, title="Добавить картинку к дополнению")
+    return await render_template(
+        "bot_data/add_item_form.html",
+        form=form,
+        title="Добавить картинку к дополнению",
+    )
 
 
 async def update_media_form(
@@ -219,6 +309,16 @@ async def update_media_form(
     details_url: str,
     details_id: int | None = None,
 ):
+    """
+    Обрабатывает форму для обновления медиа-файла (например, изображения) у объекта.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param model_crud: Класс или объект с методами CRUD для работы с моделью.
+    :param id: Идентификатор объекта, который нужно обновить.
+    :param details_url: URL для перенаправления после успешного обновления.
+    :param details_id: Идентификатор, используемый при формировании URL для перенаправления (по умолчанию None).
+    :return: Перенаправление на страницу с деталями объекта или отображение формы для редактирования медиа.
+    """
     form = await MediaForm().create_form()
     item = await model_crud.get(id, session)
     if not form.is_submitted:
@@ -242,11 +342,18 @@ async def update_media_form(
         "bot_data/add_item_form.html",
         form=form,
         image=image,
-        title="Отредактировать картинку к дополнению"
+        title="Отредактировать картинку к дополнению",
     )
 
 
 async def handle_user_form(session: AsyncSession, id: int | None = None):
+    """
+    Обрабатывает форму для добавления или обновления данных пользователя.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param id: Идентификатор пользователя для обновления (по умолчанию None для создания нового пользователя).
+    :return: Перенаправление на страницу с деталями пользователя или отображение формы для добавления/редактирования пользователя.
+    """
     form = await UserForm().create_form()
     if id:
         user = await user_crud.get(id, session)
@@ -282,4 +389,6 @@ async def handle_user_form(session: AsyncSession, id: int | None = None):
                 return redirect(url_for(".get_user", id=user.id))
             except Exception as e:
                 print(e)
-    return await render_template("bot_data/add_item_form.html", form=form, title="Данные пользователя")
+    return await render_template(
+        "bot_data/add_item_form.html", form=form, title="Данные пользователя"
+    )

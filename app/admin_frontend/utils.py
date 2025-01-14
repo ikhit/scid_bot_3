@@ -74,6 +74,16 @@ async def delete_item(
     redirect_endpoint: str,
     redirect_id: int | None = None,
 ):
+    """
+    Удаляет элемент из базы данных по заданному идентификатору и перенаправляет на указанный endpoint.
+
+    :param session: Асинхронная сессия для взаимодействия с базой данных.
+    :param model_crud: Класс или объект с методами CRUD для работы с моделью.
+    :param id: Идентификатор элемента, который нужно удалить.
+    :param redirect_endpoint: Имя endpoint для перенаправления после удаления.
+    :param redirect_id: Идентификатор, используемый при формировании URL для перенаправления (по умолчанию None).
+    :return: Редирект на указанный endpoint с переданным идентификатором.
+    """
     item = await model_crud.get(id, session)
     if item:
         await model_crud.remove(item, session)
@@ -81,12 +91,24 @@ async def delete_item(
 
 
 def generate_password():
+    """
+    Генерирует случайный пароль, состоящий из 4 цифр.
+
+    :return: Сгенерированный пароль в виде строки.
+    """
     length = 4
     password = "".join(random.choice(string.digits) for _ in range(length))
     return password
 
 
 async def send_password_to_user(telegram_chat_id, password):
+    """
+    Отправляет пользователю в Telegram его сгенерированный пароль.
+
+    :param telegram_chat_id: Идентификатор чата в Telegram, куда будет отправлено сообщение.
+    :param password: Пароль, который необходимо отправить пользователю.
+    :return: None. Отправляет сообщение через Telegram бота.
+    """
     await bot.send_message(
         telegram_chat_id,
         f"Ваш пароль для входа в админку: {password}",
@@ -94,6 +116,12 @@ async def send_password_to_user(telegram_chat_id, password):
 
 
 def nl2br(value: str) -> str:
+    """
+    Преобразует символы новой строки в HTML-теги <br> и <p>.
+
+    :param value: Строка, в которой нужно заменить символы новой строки.
+    :return: Строка, в которой символы новой строки заменены на HTML теги.
+    """
     value = re.sub(r"\n\n", "</p><p>", value)
     value = value.replace("\n", "<br>")
     return f"<p>{value}</p>"

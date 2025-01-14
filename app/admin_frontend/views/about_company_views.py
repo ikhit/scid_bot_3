@@ -15,6 +15,7 @@ about_company = Blueprint("about_company", __name__)
 @about_company.route("/")
 @db_session
 async def get_company_about(session: AsyncSession):
+    """Функция представления для списка данных о компании."""
     infos = await company_info_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=infos,
@@ -29,6 +30,7 @@ async def get_company_about(session: AsyncSession):
 @about_company.route("/<int:id>")
 @db_session
 async def get_company_about_details(session: AsyncSession, id: int):
+    """Функция представления для карточки с информацией о компании."""
     info = await company_info_crud.get(id, session)
     return await render_template(
         "bot_data/card.html",
@@ -41,6 +43,9 @@ async def get_company_about_details(session: AsyncSession, id: int):
 @about_company.route("/add", methods=["GET", "POST"])
 @db_session
 async def add_info(session: AsyncSession):
+    """
+    Функция представления для добавления карточки с информацией о компании.
+    """
     return await add_url_form(
         session, company_info_crud, ".get_company_about_details"
     )
@@ -49,6 +54,9 @@ async def add_info(session: AsyncSession):
 @about_company.route("/<int:id>/delete")
 @db_session
 async def delete_about_company(session: AsyncSession, id: int):
+    """
+    Функция представления для удаления карточки с информацией о компании.
+    """
     return await delete_item(
         session, company_info_crud, id, ".get_company_about"
     )
@@ -57,6 +65,9 @@ async def delete_about_company(session: AsyncSession, id: int):
 @about_company.route("/<int:id>/update", methods=["GET", "POST"])
 @db_session
 async def update_about_company(session: AsyncSession, id: int):
+    """
+    Функция представления для обнововления карточки с информацией о компании.
+    """
     return await update_url_form(
         session, company_info_crud, id, ".get_company_about_details"
     )

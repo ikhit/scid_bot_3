@@ -15,6 +15,7 @@ from models.models import RoleEnum
 
 
 class BaseForm(QuartForm):
+    """Базовый абкстрактный класс для форм."""
     name = StringField(
         "Введите название",
         validators=[
@@ -26,6 +27,7 @@ class BaseForm(QuartForm):
 
 
 class URLForm(BaseForm):
+    """Класс для форм ввода ссылок."""
     url = URLField(
         "Добавьте ссылку",
         validators=[
@@ -35,6 +37,7 @@ class URLForm(BaseForm):
 
 
 class TextForm(BaseForm):
+    """Класс для форм ввода текста."""
     description = TextAreaField(
         "Введите текст",
         validators=[
@@ -44,6 +47,7 @@ class TextForm(BaseForm):
 
 
 class MediaForm(BaseForm):
+    """Класс для форм добавления картинки."""
     media = FileField(
         validators=[
             FileRequired(),
@@ -58,6 +62,7 @@ class MediaForm(BaseForm):
 
 
 class QuestionForm(QuartForm):
+    """Класс для форм категорий вопросов."""
     question = StringField(
         "Введите название категории вопросов",
         validators=[
@@ -75,6 +80,7 @@ class QuestionForm(QuartForm):
 
 
 class SetTimer(QuartForm):
+    """Класс для формы изменения таймера активности."""
     timer = IntegerField(
         "Введите значение таймера в секундах",
         validators=[
@@ -85,6 +91,7 @@ class SetTimer(QuartForm):
 
 
 class UserForm(QuartForm):
+    """Класс для форм пользователей."""
     telegram_id = IntegerField(
         "Введите Telegram ID пользователя",
         validators=[
