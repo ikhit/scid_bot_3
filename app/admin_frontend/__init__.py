@@ -37,6 +37,13 @@ Session(app)
 
 @app.before_request
 async def check_authorization():
+    """
+    Проверяет авторизацию пользователя перед каждым запросом.
+    Функция выполняется перед каждым запросом и проверяет наличие ключа 
+    "user_id" в сессии. Если ключ отсутствует и текущий маршрут не является 
+    маршрутом для логина или пароля администратора, происходит перенаправление
+    на страницу логина.
+    """
     if "user_id" not in q_session and request.endpoint not in [
         "auth.admin_login",
         "auth.admin_password",
@@ -46,4 +53,9 @@ async def check_authorization():
 
 @app.route("/")
 async def index():
+    """
+    Отображает главную страницу.
+    Функция обрабатывает запрос на главную страницу сайта и рендерит
+    шаблон "base.html".
+    """
     return await render_template("base.html")
