@@ -28,6 +28,12 @@ managers = Blueprint("managers", __name__)
 @managers.route("/")
 @db_session
 async def get_managers(session):
+    """
+    Обрабатывает запрос на получение списка пользователей (менеджеров).
+    Функция извлекает список всех пользователей из базы данных и отображает 
+    его на странице с пагинацией. 
+    Возвращается список пользователей с ссылками на подробности каждого.
+    """
     users = await user_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=users,
@@ -41,6 +47,12 @@ async def get_managers(session):
 @managers.route("/callbacks")
 @db_session
 async def get_manager_callbacks(session: AsyncSession):
+    """
+    Обрабатывает запрос на получение списка заявок на обратный звонок.
+    Функция извлекает все заявки на обратный звонок из базы данных 
+    и отображает их на странице с пагинацией. 
+    Также отображается кнопка для закрытия каждой заявки.
+    """
     callbacks = await get_all_manager_requests(session)
     return await get_paginated_data_and_render(
         data=callbacks,
@@ -56,6 +68,12 @@ async def get_manager_callbacks(session: AsyncSession):
 @managers.route("/support")
 @db_session
 async def get_support_requests(session: AsyncSession):
+    """
+    Обрабатывает запрос на получение списка заявок на техподдержку.
+    Функция извлекает все заявки на техподдержку из базы данных и 
+    отображает их на странице с пагинацией. 
+    Также отображается кнопка для закрытия каждой заявки.
+    """
     callbacks = await get_all_support_requests(session)
     return await get_paginated_data_and_render(
         data=callbacks,
@@ -71,6 +89,11 @@ async def get_support_requests(session: AsyncSession):
 @managers.route("/closed-cases")
 @db_session
 async def get_all_closed_cases(session: AsyncSession):
+    """
+    Обрабатывает запрос на получение списка закрытых заявок.
+    Функция извлекает все закрытые заявки из базы данных и 
+    отображает их на странице с пагинацией.
+    """
     closed_cases = await get_closed_cases(session)
     return await get_paginated_data_and_render(
         data=closed_cases,
@@ -83,6 +106,12 @@ async def get_all_closed_cases(session: AsyncSession):
 @managers.route("/feedbacks")
 @db_session
 async def get_feedbacks(session: AsyncSession):
+    """
+    Обрабатывает запрос на получение списка отзывов.
+    Функция извлекает все отзывы из базы данных и отображает их на странице
+    с пагинацией. Также доступны ссылки на подробную информацию 
+    о каждом отзыве.
+    """
     feedbacks = await feedback_crud.get_multi(session)
     return await get_paginated_data_and_render(
         data=feedbacks,
@@ -95,6 +124,12 @@ async def get_feedbacks(session: AsyncSession):
 
 @managers.route("/specials", methods=["GET", "POST"])
 async def get_specials():
+    """
+    Обрабатывает запрос на отображение и изменение таймера 
+    для специальных операций. Функция извлекает текущее значение 
+    таймера из Redis и отображает форму для его изменения.
+    При успешной отправке формы таймер обновляется в Redis.
+    """
     redis_client = await get_redis_connection()
     timer = await redis_client.get("timeout")
     await redis_client.close()
@@ -114,6 +149,11 @@ async def get_specials():
 @managers.route("/feedbacks/<int:id>")
 @db_session
 async def get_feedback(session: AsyncSession, id: int):
+    """
+    Обрабатывает запрос на отображение подробной 
+    информации о конкретном отзыве. Функция извлекает 
+    отзыв по ID и отображает его на странице.
+    """
     feedback = await feedback_crud.get(id, session)
     return await render_template("bot_data/card.html", feedback=feedback)
 
@@ -121,6 +161,11 @@ async def get_feedback(session: AsyncSession, id: int):
 @managers.route("/case/<int:id>")
 @db_session
 async def close_current_case(session: AsyncSession, id: int):
+    """
+    Обрабатывает запрос на закрытие конкретной заявки.
+    Функция закрывает заявку по заданному ID и перенаправляет
+    на соответствующую страницу (обратные звонки или заявки на техподдержку).
+    """
     await close_case(q_session["user_id"], id, session)
     case = await get_request(id, session)
     url = (

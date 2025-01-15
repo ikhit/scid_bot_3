@@ -24,6 +24,13 @@ auth = Blueprint("auth", __name__)
 @auth.route("/login", methods=["GET", "POST"])
 @db_session
 async def admin_login(db_session: AsyncSession):
+    """
+    Обрабатывает запрос на вход администратора в систему.
+    Если запрос GET, отображается форма для ввода Telegram ID.
+    Если запрос POST, производится проверка Telegram ID и создание пароля 
+    для входа.
+    Пароль отправляется пользователю, а его Telegram ID сохраняется в сессии.
+    """
     if request.method == "POST":
         form_data = await request.form
         if "telegram_id" not in form_data:
@@ -47,6 +54,13 @@ async def admin_login(db_session: AsyncSession):
 
 @auth.route("/password", methods=["GET", "POST"])
 async def admin_password():
+    """
+    Обрабатывает запрос на ввод пароля администратора.
+    Если запрос GET, отображается форма для ввода пароля.
+    Если запрос POST, происходит проверка введенного пароля с 
+    сохраненным в Redis.
+    В случае успешной проверки, администратор получает доступ к системе.
+    """
     if request.method == "POST":
         telegram_id = q_session.get("telegram_id")
         if not telegram_id:
@@ -70,5 +84,10 @@ async def admin_password():
 
 @auth.route("/logout")
 def logout():
+    """   
+    Обрабатывает запрос на выход пользователя из системы.
+    Удаляет идентификатор пользователя из сессии и перенаправляет 
+    на страницу входа.
+    """
     q_session.pop("user_id", None)
     return redirect(url_for(".admin_login"))
